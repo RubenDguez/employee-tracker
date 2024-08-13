@@ -1,19 +1,61 @@
-export default class Employee {
-    readonly id: number;
-    readonly firstName: string;
-    readonly lastName: string;
-    readonly roleId: number;
-    readonly managerId: number;
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
+import Base from "./Base";
 
-    constructor(id: number, firstName: string, lastName: string, roleId: number, managerId: number, createdAt: Date, updatedAt: Date) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.roleId = roleId;
-        this.managerId = managerId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+export default class Employee extends Base {
+    #firstName: string;
+    #lastName: string;
+    #roleId: number;
+    #managerId: number;
+
+    constructor(firstName: string, lastName: string, roleId: number, managerId: number, id?: number, createdAt?: Date, updatedAt?: Date) {
+        super(id, createdAt, updatedAt);
+
+        this.#firstName = firstName;
+        this.#lastName = lastName;
+        this.#roleId = roleId;
+        this.#managerId = managerId;
+    }
+
+    get firstName(): string {
+        return this.#firstName;
+    }
+
+    set firstName(value: string) {
+        this.#firstName = value;
+    }
+
+    get lastName(): string {
+        return this.#lastName;
+    }
+
+    set lastName(value: string) {
+        this.#lastName = value;
+    }
+
+    get roleId(): number {
+        return this.#roleId;
+    }
+
+    set roleId(value: number) {
+        this.#roleId = value;
+    }
+
+    get managerId(): number {
+        return this.#managerId;
+    }
+
+    set managerId(value: number) {
+        this.#managerId = value;
+    }
+
+    override toObject(): Employee {
+        return <Employee> {
+            id: this.id,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            roleId: this.roleId,
+            managerId: this.managerId,
+            createdAt: this.createdAt,
+            updatedAt: this.updatedAt,
+        }
     }
 }

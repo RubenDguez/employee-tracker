@@ -15,3 +15,10 @@ interface RoleUpdatable {
 interface DepartmentUpdatable {
 	name: string;
 }
+
+interface EmployeeUpdatable {
+    firstName: string;
+    lastName: string;
+    roleId: number;
+    managerId: number;
+}
