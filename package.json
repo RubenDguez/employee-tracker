@@ -3,21 +3,24 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-      "start": "tsc && node dist/index.js",
-      "test": "echo \"Error: no test specified\" && exit 1"
-    },
+    "start": "tsc && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "keywords": [],
   "author": "Argenis Ruben Dominguez",
   "license": "MIT",
   "description": "",
   "devDependencies": {
     "@types/inquirer": "^9.0.7",
+    "@types/luxon": "^3.4.2",
     "@types/pg": "^8.11.6",
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "console.table": "^0.10.0",
     "dotenv": "^16.4.5",
     "inquirer": "^10.1.8",
+    "luxon": "^3.5.0",
     "pg": "^8.12.0"
   }
 }
