@@ -1,3 +1,8 @@
+SELECT pg_terminate_backend(pg_stat_activity.pid)
+FROM pg_stat_activity
+WHERE pg_stat_activity.datname = 'employee_tracker_db'
+  AND pid <> pg_backend_pid();
+
 DROP DATABASE IF EXISTS employee_tracker_db;
 
 CREATE DATABASE employee_tracker_db;
