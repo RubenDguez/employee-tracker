@@ -1,13 +1,28 @@
-export default class Department {
-	readonly id: number;
-	readonly name: string;
-	readonly createdAt: Date;
-	readonly updatedAt: Date;
+import Base from './Base';
 
-    constructor(id: number, name: string, createdAt: Date, updatedAt: Date) {
-        this.id = id;
-        this.name = name;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
+export default class Department extends Base {
+	#name: string;
+
+	constructor(name: string, id?: number, createdAt?: Date, updatedAt?: Date) {
+		super(id, createdAt, updatedAt);
+
+		this.#name = name;
+	}
+
+	get name(): string {
+		return this.#name;
+	}
+
+	set name(value: string) {
+		this.#name = value;
+	}
+
+	toObject(): Department {
+		return <Department>{
+			id: this.id,
+			name: this.name,
+			createdAt: this.createdAt,
+			updatedAt: this.updatedAt,
+		};
+	}
 }
