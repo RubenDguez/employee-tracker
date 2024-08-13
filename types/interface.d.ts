@@ -1,5 +1,5 @@
 interface CRUD {
-	create: (obj: any) => Promise;
+	create: () => Promise;
 	readAll: () => Promise<Array>;
 	readOne: (id: number) => Promise;
 	update: (obj: any) => Promise;
@@ -10,4 +10,8 @@ interface RoleUpdatable {
 	title: string;
 	salary: number;
 	departmentId: number;
+}
+
+interface DepartmentUpdatable {
+	name: string;
 }

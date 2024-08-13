@@ -32,7 +32,9 @@ export default class DB {
 	 */
 	async connection(): Promise<PoolClient> {
 		try {
-			if (this.#connection) return this.#connection;
+			if (this.#connection) {
+				return this.#connection;
+			}
 
 			this.#connection = await this.pool.connect();
 			console.log('DB is now connected...');
