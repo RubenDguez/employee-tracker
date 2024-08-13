@@ -42,10 +42,15 @@ export default class RoleController extends Controller implements CRUD {
 	async readOne(id: number): Promise<Role> {
 		try {
 			const values = [id];
-			const query = 'SELECT * FROM role WHERE id=$1;';
+			const query = `
+			SELECT role.id, role.title, role.salary, department.name AS department_name, role.created_at, role.updated_at
+			FROM role
+			JOIN department ON role.department_id = department.id
+			WHERE role.id = $1;
+			`;
 			const results = await this.fetch(query, values);
 			const row = results.rows[0];
-			return new Role(row.title, parseFloat(row.salary), row.department_id, row.id, new Date(row.created_at), new Date(row.updated_at)).toObject();
+			return new Role(row.title, parseFloat(row.salary), row.department_name, row.id, new Date(row.created_at), new Date(row.updated_at)).toObject();
 		} catch (error) {
 			const ERROR = <Error>error;
 			throw new Error(ERROR.message);
@@ -59,9 +64,13 @@ export default class RoleController extends Controller implements CRUD {
 	 */
 	async readAll(): Promise<Array<Role>> {
 		try {
-			const query = 'SELECT * FROM role;';
+			const query = `
+			SELECT role.id, role.title, role.salary, department.name AS department_name, role.created_at, role.updated_at
+			FROM role
+			JOIN department ON role.department_id = department.id;
+			`;
 			const results = await this.fetch(query);
-			return results.rows.map((row) => new Role(row.title, parseFloat(row.salary), row.department_id, row.id, new Date(row.created_at), new Date(row.updated_at)).toObject());
+			return results.rows.map((row) => new Role(row.title, parseFloat(row.salary), row.department_name, row.id, new Date(row.created_at), new Date(row.updated_at)).toObject());
 		} catch (error) {
 			const ERROR = <Error>error;
 			throw new Error(ERROR.message);
