@@ -1,4 +1,5 @@
 import Department from './Department';
+import Employee from './Employee';
 import Role from './Role';
 
 export default abstract class Base {
@@ -36,5 +37,5 @@ export default abstract class Base {
 		this.#updatedAt = value;
 	}
 
-	abstract toObject(): Role | Department;
+	abstract toObject(): Role | Department | Employee;
 }
