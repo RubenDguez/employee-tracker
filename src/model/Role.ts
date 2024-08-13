@@ -1,68 +1,50 @@
-export default class Role {
-	#id: number | null;
+import Base from './Base';
+
+export default class Role extends Base {
 	#title: string;
 	#salary: number;
 	#departmentId: number;
-	#createdAt: Date | null;
-	#updatedAt: Date | null;
 
 	constructor(title: string, salary: number, departmentId: number, id?: number, createdAt?: Date, updatedAt?: Date) {
-		this.#id = id || null;
-        this.#title = title;
+		super(id, createdAt, updatedAt);
+
+		this.#title = title;
 		this.#salary = salary;
 		this.#departmentId = departmentId;
-		this.#createdAt = createdAt || null;
-		this.#updatedAt = updatedAt || null;
 	}
 
-    get id(): number | null {
-        return this.#id;
-    }
+	get title() {
+		return this.#title;
+	}
 
-    set id(value: number) {
-        this.#id = value;
-    }
+	set title(value: string) {
+		this.#title = value;
+	}
 
-    get title() {
-        return this.#title;
-    }
+	get salary() {
+		return this.#salary;
+	}
 
-    set title(value: string) {
-        this.#title = value;
-    }
+	set salary(value: number) {
+		this.#salary = value;
+	}
 
-    get salary() {
-        return this.#salary;
-    }
+	get departmentId() {
+		return this.#departmentId;
+	}
 
-    set salary(value: number) {
-        this.#salary = value;
-    }
+	set departmentId(value: number) {
+		this.#departmentId = value;
+	}
 
-    get departmentId() {
-        return this.#departmentId
-    }
-
-    set departmentId(value: number) {
-        this.#departmentId = value; 
-    }
-
-    get createdAt() {
-        return this.#createdAt;
-    }
-
-    get updatedAt() {
-        return this.#updatedAt;
-    }
-
-    toObject(): Role {
-        return <Role>{
-            id: this.id,
-            title: this.title,
-            salary: this.salary,
-            departmentId: this.departmentId,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt,
-        };
-    }
+	override toObject(): Role {
+		return <Role>{
+			id: this.id,
+			title: this.title,
+			salary: this.salary,
+			departmentId: this.departmentId,
+			createdAt: this.createdAt,
+			updatedAt: this.updatedAt,
+		};
+	}
 }
