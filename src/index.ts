@@ -2,6 +2,8 @@ import Role from './model/Role';
 import RoleController from './controller/RoleController';
 import DepartmentController from './controller/DepartmentController';
 import Department from './model/Department';
+import EmployeeController from './controller/EmployeeController';
+import Employee from './model/Employee';
 
 async function init() {
 	const roleController = new RoleController();
@@ -29,6 +31,18 @@ async function init() {
 	console.log('CREATE', await departmentTransaction.create());
 	console.log('UPDATE', await departmentTransaction.update({ name: 'Used Gear' }));
 	console.log('DELETE', await departmentTransaction.delete());
+
+	console.log('\nEMPLOYEES...\n');
+
+	const employeeController = new EmployeeController();
+	console.log('READ ONE', await employeeController.readOne(1));
+	console.log('READ ALL', await employeeController.readAll());
+
+	const employee = new Employee('Lisa', 'Freiwald', 1, 1);
+	const employeeTransaction = new EmployeeController(employee);
+	console.log('CREATE', await employeeTransaction.create());
+	console.log('UPDATE', await employeeTransaction.update({ firstName: 'Soraya' }));
+	console.log('DELETE', await employeeTransaction.delete());
 
 	process.exit(0);
 }
