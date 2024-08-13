@@ -1,12 +1,13 @@
+import { DateTime } from "luxon";
 import Base from "./Base";
 
 export default class Employee extends Base {
     #firstName: string;
     #lastName: string;
-    #roleId: number;
+    #roleId: number | string;
     #managerId: number;
 
-    constructor(firstName: string, lastName: string, roleId: number, managerId: number, id?: number, createdAt?: Date, updatedAt?: Date) {
+    constructor(firstName: string, lastName: string, roleId: number | string, managerId: number, id?: number, createdAt?: Date, updatedAt?: Date) {
         super(id, createdAt, updatedAt);
 
         this.#firstName = firstName;
@@ -31,7 +32,7 @@ export default class Employee extends Base {
         this.#lastName = value;
     }
 
-    get roleId(): number {
+    get roleId(): number | string {
         return this.#roleId;
     }
 
@@ -54,8 +55,8 @@ export default class Employee extends Base {
             lastName: this.lastName,
             roleId: this.roleId,
             managerId: this.managerId,
-            createdAt: this.createdAt,
-            updatedAt: this.updatedAt,
+			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
+			updatedAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
         }
     }
 }

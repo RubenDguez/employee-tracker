@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import Base from './Base';
 
 export default class Department extends Base {
@@ -21,8 +22,8 @@ export default class Department extends Base {
 		return <Department>{
 			id: this.id,
 			name: this.name,
-			createdAt: this.createdAt,
-			updatedAt: this.updatedAt,
+			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
+			updatedAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
 		};
 	}
 }

@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import Base from './Base';
 
 export default class Role extends Base {
@@ -43,8 +44,8 @@ export default class Role extends Base {
 			title: this.title,
 			salary: this.salary,
 			departmentId: this.departmentId,
-			createdAt: this.createdAt,
-			updatedAt: this.updatedAt,
+			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
+			updatedAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
 		};
 	}
 }
