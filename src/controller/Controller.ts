@@ -1,5 +1,5 @@
-import { QueryResult } from "pg";
-import DB from "../db";
+import { QueryResult } from 'pg';
+import DB from '../db';
 
 export default class Controller {
 	/**
@@ -9,7 +9,7 @@ export default class Controller {
 	 */
 	protected async fetch(query: string, values?: any): Promise<QueryResult<any>> {
 		try {
-            const conn = await DB.getInstance().connection();
+			const conn = await DB.getInstance().connection();
 			const res = await conn.query(query, values);
 			return res;
 		} catch (err) {
