@@ -1,7 +1,7 @@
-import DB from "../db";
 import Role from "../model/Role";
+import Controller from "./Controller";
 
-export default class RoleController extends DB implements CRUD {
+export default class RoleController extends Controller implements CRUD {
     private readonly role: Role | undefined;
 
     /**
@@ -9,7 +9,7 @@ export default class RoleController extends DB implements CRUD {
      * @param {Role} role
      */
     constructor(role?: Role) {
-        super();
+		super();
         this.role = role;
     }
 
@@ -22,7 +22,6 @@ export default class RoleController extends DB implements CRUD {
 	async create(): Promise<Role> {
         if (!this.role) throw new Error('Role is not defined');
 		try {
-			await this.connect();
 			const values = [this.role.title, this.role.salary, this.role.departmentId];
 			const query = 'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3) RETURNING *;';
 			const results = await this.fetch(query, values);
@@ -42,7 +41,6 @@ export default class RoleController extends DB implements CRUD {
      */
 	async readOne(id: number): Promise<Role> {
 		try {
-			await this.connect();
             const values = [id];
 			const query = 'SELECT * FROM role WHERE id=$1;';
 			const results = await this.fetch(query, values);
@@ -61,7 +59,6 @@ export default class RoleController extends DB implements CRUD {
      */
 	async readAll(): Promise<Array<Role>> {
 		try {
-			await this.connect();
 			const query = 'SELECT * FROM role;';
 			const results = await this.fetch(query);
 			return results.rows.map((row) => new Role(row.title, parseFloat(row.salary), row.department_id, row.id,  new Date(row.created_at), new Date(row.updated_at)).toObject());
@@ -81,8 +78,7 @@ export default class RoleController extends DB implements CRUD {
 	async update(fields: Partial<RoleUpdatable>): Promise<Role> {
         if (!this.role) throw new Error('Role is not defined');
 		try {
-			await this.connect();
-			const values = [fields.title || this.role.title, fields.salary || this.role.salary, fields.departmentId || this.role.departmentId, this.role.id];
+			const values = [fields.title ?? this.role.title, fields.salary ?? this.role.salary, fields.departmentId ?? this.role.departmentId, this.role.id];
 			const query = 'UPDATE role SET title = COALESCE($1, title), salary = COALESCE($2, salary), department_id = COALESCE($3, department_id) WHERE id=$4 RETURNING *;';
 			await this.fetch(query, values);
 			return this.readOne(this.role.id!)
@@ -101,7 +97,6 @@ export default class RoleController extends DB implements CRUD {
 	async delete(): Promise<boolean> {
 		if (!this.role) throw new Error('Role is not defined');
 		try {
-			await this.connect();
 			const values = [this.role.id];
 			const query = 'DELETE FROM role WHERE id = $1;';
 			await this.fetch(query, values);
