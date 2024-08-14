@@ -7,8 +7,11 @@ import Title from './Title';
 import Department from '../model/Department';
 import { newRole } from './Role';
 import Role from '../model/Role';
+import { newEmployee } from './Employee';
+import Employee from '../model/Employee';
 
 export default class Actions {
+	#response: any;
 	static #actionsInstance: Actions | null = null;
 
 	#departmentController: DepartmentController;
@@ -17,6 +20,7 @@ export default class Actions {
 
 	#department: Department | null = null;
 	#role: Role | null = null;
+	#employee: Employee | null = null;
 
 	private constructor() {
 		this.#departmentController = new DepartmentController();
@@ -32,37 +36,90 @@ export default class Actions {
 		return this.#actionsInstance;
 	}
 
-	async act(action: string) {
-		let response: any;
+	private async viewAllDepartments() {
+		Title();
+		console.table(await this.#departmentController.readAll());
+	}
 
-		const departmentList = (await this.#departmentController.readAll()).map((department, index) => ({name: department.name, value: index + 1}));
+	private async viewAllRoles() {
+		Title();
+		console.table(await this.#roleController.readAll());
+	}
+
+	private async viewAllEmployees() {
+		Title();
+		console.table(await this.#employeeController.readAll());
+	}
+
+	private async addDepartment() {
+		Title();
+		console.table(await this.#departmentController.readAll());
+
+		this.#response = await inquirer.prompt(<any>newDepartment());
+		this.#department = new Department(this.#response.name);
+		this.#departmentController = new DepartmentController(this.#department);
+		await this.#departmentController.create();
 
 		Title();
+		console.table(await this.#departmentController.readAll());
+	}
+
+	private async addRole() {
+		const departmentList = (await this.#departmentController.readAll()).map((department) => ({ name: department.name, value: department.id ?? 0 }));
+		
+		Title();
+		console.table(await this.#roleController.readAll());
+
+		this.#response = await inquirer.prompt(<any>newRole(departmentList));
+		this.#role = new Role(this.#response.name, parseFloat(this.#response.salary), this.#response.department);
+		this.#roleController = new RoleController(this.#role);
+		await this.#roleController.create();
+		
+		Title();
+		console.table(await this.#roleController.readAll());
+	}
+
+	private async addEmployee() {
+		const roleList = (await this.#roleController.readAll()).map((role) => ({ name: role.title, value: role.id ?? 0 }));
+		const managerList = (await this.#employeeController.readAll()).filter((employee) => (employee.roleId === 'Manager')).map((emp) => ({name: `${emp.firstName} ${emp.lastName}`, value: emp.id ?? 0}));
+		
+		Title();
+		console.table(await this.#employeeController.readAll());
+		
+		this.#response = await inquirer.prompt(<any>newEmployee(roleList, managerList));
+
+		if (this.#response.role !== 1 && this.#response.manager === null) {
+			console.error('\nThis type of employee must have a manager.\n');
+			return;
+		}
+
+		this.#employee = new Employee(this.#response.firstName, this.#response.lastName, this.#response.role, this.#response.manager);
+		this.#employeeController = new EmployeeController(this.#employee);
+		this.#employeeController.create();
+
+		Title();
+		console.table(await this.#employeeController.readAll());
+	}
+
+	async act(action: string) {
 		switch (action) {
 			case 'View all departments':
-				console.table(await this.#departmentController.readAll());
+				await this.viewAllDepartments();
 				break;
 			case 'View all roles':
-				console.table(await this.#roleController.readAll());
+				await this.viewAllRoles();
 				break;
 			case 'View all employees':
-				console.table(await this.#employeeController.readAll());
+				await this.viewAllEmployees();
 				break;
 			case 'Add a department':
-				response = await inquirer.prompt(<any>newDepartment());
-				this.#department = new Department(response.name);
-				this.#departmentController = new DepartmentController(this.#department);
-				await this.#departmentController.create();
-				console.table(await this.#departmentController.readAll());
+				await this.addDepartment();
 				break;
 			case 'Add a role':
-				response = await inquirer.prompt(<any> newRole(departmentList));
-				this.#role = new Role(response.name, parseFloat(response.salary), response.department);
-				this.#roleController = new RoleController(this.#role);
-				await this.#roleController.create();
-				console.table(await this.#roleController.readAll());
+				await this.addRole();
 				break;
 			case 'Add an employee':
+				await this.addEmployee();
 				break;
 			default:
 				return;
