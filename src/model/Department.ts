@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import Base from './Base';
+import State, { EState } from '../store/state';
 
 export default class Department extends Base {
 	#name: string;
@@ -19,11 +20,17 @@ export default class Department extends Base {
 	}
 
 	toObject(): Department {
-		return <Department>{
+		let department: Partial<Department> = {
 			id: this.id,
 			name: this.name,
+		}
+
+		if (State.getInstance().get(EState.ROLE) === 'manager') department = {
+			...department,
 			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
-		};
+		}
+
+		return <Department>department;
 	}
 }
