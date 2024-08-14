@@ -106,6 +106,7 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */,
     "types": [
       "@types/luxon",
+      "./types/types.d.ts",
       "./types/interface.d.ts"
     ]
   }
