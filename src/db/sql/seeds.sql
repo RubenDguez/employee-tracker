@@ -57,5 +57,5 @@ SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_
     employee.created_at, employee.updated_at
 FROM employee
 JOIN role ON employee.role_id = role.id
-LEFT JOIN employee AS manager ON employee.manager_id = manager.id;
+LEFT JOIN employee AS manager ON employee.manager_id = manager.id
 WHERE employee.id = 1;
