@@ -18,7 +18,7 @@ const main = () => {
 	];
 
 
-	if (State.getInstance().get(EState.ROLE) === 'manager') {
+	if (State.getInstance().get(EState.ROLE)?.includes('manager')) {
 		const managerOpts = [
 			'Delete department',
 			'Delete role',

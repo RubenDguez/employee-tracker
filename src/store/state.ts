@@ -1,4 +1,7 @@
 export enum EState {
+    USER_ID = 'USER_ID',
+    USER_FULL_NAME = 'USER_FULL_NAME',
+    USERNAME = 'USERNAME',
     ROLE = 'ROLE',
 }
 

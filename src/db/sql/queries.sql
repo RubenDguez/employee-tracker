@@ -31,7 +31,7 @@ JOIN role ON employee.role_id = role.id
 LEFT JOIN employee AS manager ON employee.manager_id = 1;
 
 
-SELECT login.username, role.title AS role_title
+SELECT employee.id, CONCAT(employee.first_name, ' ' ,employee.last_name) AS full_name, LOWER(role.title)
 FROM login
 JOIN employee ON login.employee_id = employee.id
 JOIN role ON employee.role_id = role.id
