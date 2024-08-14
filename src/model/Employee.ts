@@ -5,9 +5,9 @@ export default class Employee extends Base {
     #firstName: string;
     #lastName: string;
     #roleId: number | string;
-    #managerId: number;
+    #managerId: number | string;
 
-    constructor(firstName: string, lastName: string, roleId: number | string, managerId: number, id?: number, createdAt?: Date, updatedAt?: Date) {
+    constructor(firstName: string, lastName: string, roleId: number | string, managerId: number | string, id?: number, createdAt?: Date, updatedAt?: Date) {
         super(id, createdAt, updatedAt);
 
         this.#firstName = firstName;
@@ -40,7 +40,7 @@ export default class Employee extends Base {
         this.#roleId = value;
     }
 
-    get managerId(): number {
+    get managerId(): number | string {
         return this.#managerId;
     }
 
