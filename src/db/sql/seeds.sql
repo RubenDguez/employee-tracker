@@ -30,13 +30,15 @@ DO $$
         VALUES
             ('Argenis', 'Dominguez', 1, null),
             ('Ruben', 'Dominguez', 2, 1),
-            ('Lisa', 'Freiwald', 3, 2);
+            ('Lisa', 'Freiwald', 3, 2),
+            ('Alexander', 'Ramhit', 4, 3);
 
         INSERT INTO login (username, userpassword, employee_id)
         VALUES
             ('argenisdominguez', 'pass', 1),
             ('rubendominguez', 'pass', 2),
-            ('lisafreiwald', 'pass', 3);
+            ('lisafreiwald', 'pass', 3),
+            ('alexander', 'pass', 4);
 
     RAISE NOTICE 'TRANSACTION COMPLETED';
 
