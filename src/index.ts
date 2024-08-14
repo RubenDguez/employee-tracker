@@ -1,20 +1,27 @@
 import inquirer from 'inquirer';
 import DB from './db';
 import Actions from './prompts/Actions';
-import Main from './prompts/Main';
 import Title from './prompts/Title';
+import State, { EState } from './store/state';
+import Login from './prompts/Login';
+import { main } from './prompts/Main';
 const cTable = require('console.table');
 
 async function init() {
-	Title('Main Menu');
-
-	await DB.getInstance().connection();
-	const actions = Actions.getInstance();
-
+	let choice;
 	try {
-		let choice;
+		Title('Login');
+		await DB.getInstance().connection();
+
+		// login process goes here...
+		const response = await inquirer.prompt(<any>Login);
+		if (response.username === 'argenisdominguez') State.getInstance().set(EState.ROLE, 'manager');
+
+		const actions = Actions.getInstance();
+
+		Title('Main Menu');
 		do {
-			choice = (await inquirer.prompt(<any>Main)).mainOption;
+			choice = (await inquirer.prompt(<any>main())).mainOption;
 			await actions.act(choice);
 		} while (choice !== 'exit');
 		Title('Thanks for using this app 🤗 ❤️ 🙏');
