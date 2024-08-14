@@ -2,10 +2,12 @@ import Department from './Department';
 import Employee from './Employee';
 import Role from './Role';
 
+type TDate = Date | string | null
+
 export default abstract class Base {
 	#id: number | null;
-	#createdAt: Date | null;
-	#updatedAt: Date | null;
+	#createdAt: TDate;
+	#updatedAt: TDate;
 
 	constructor(id?: number, createdAt?: Date, updatedAt?: Date) {
 		this.#id = id ?? null;
@@ -21,7 +23,7 @@ export default abstract class Base {
 		this.#id = value;
 	}
 
-	get createdAt(): Date | null {
+	get createdAt(): TDate {
 		return this.#createdAt;
 	}
 
@@ -29,7 +31,7 @@ export default abstract class Base {
 		this.#createdAt = value;
 	}
 
-	get updatedAt(): Date | null {
+	get updatedAt(): TDate {
 		return this.#updatedAt;
 	}
 

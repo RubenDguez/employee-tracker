@@ -37,7 +37,7 @@ export default class DB {
 			}
 
 			this.#connection = await this.pool.connect();
-			console.log('DB is now connected...');
+			console.warn('\nDB is now connected...\n');
 			return this.#connection;
 		} catch (err) {
 			const ERROR = <Error>err;

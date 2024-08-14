@@ -43,7 +43,15 @@ export default class EmployeeController extends Controller implements CRUD {
     async readOne(id: number): Promise<Employee> {
 		try {
 			const values = [id];
-			const query = 'SELECT * FROM employee WHERE id=$1;';
+			const query = `
+			SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_name, 
+				CASE WHEN manager.id IS NULL THEN 'NONE' ELSE CONCAT(manager.first_name, ' ', manager.last_name) END AS manager_full_name, 
+				employee.created_at, employee.updated_at
+			FROM employee
+			JOIN role ON employee.role_id = role.id
+			LEFT JOIN employee AS manager ON employee.manager_id = manager.id;
+			WHERE employee.id = $1;
+			`;
 			const results = await this.fetch(query, values);
 			const row = results.rows[0];
 			return new Employee(row.first_name, row.last_name, row.role_id, row.manager_id, row.id, row.created_at, row.updated_at).toObject();
@@ -60,9 +68,16 @@ export default class EmployeeController extends Controller implements CRUD {
      */
     async readAll(): Promise<Array<Employee>> {
 		try {
-			const query = 'SELECT * FROM employee;';
+			const query = `
+			SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_name, 
+				CASE WHEN manager.id IS NULL THEN 'NONE' ELSE CONCAT(manager.first_name, ' ', manager.last_name) END AS manager_full_name, 
+				employee.created_at, employee.updated_at
+			FROM employee
+			JOIN role ON employee.role_id = role.id
+			LEFT JOIN employee AS manager ON employee.manager_id = manager.id;
+			`;
 			const results = await this.fetch(query);
-			return results.rows.map((row) => new Employee(row.first_name, row.last_name, row.role_id, row.manager_id, row.id, row.created_at, row.updated_at).toObject());
+			return results.rows.map((row) => new Employee(row.first_name, row.last_name, row.role_name, row.manager_full_name, row.id, row.created_at, row.updated_at).toObject());
 		} catch (error) {
 			const ERROR = <Error>error;
 			throw new Error(ERROR.message);
