@@ -22,7 +22,7 @@ export default class RoleController extends Controller implements CRUD {
 	async create(): Promise<Role> {
 		if (!this.role) throw new Error('Role is not defined');
 		try {
-			const values = [this.role.title, this.role.salary, this.role.departmentId];
+			const values = [this.role.title, this.role.salary, this.role.department];
 			const query = 'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3) RETURNING *;';
 			const results = await this.fetch(query, values);
 			const row = results.rows[0];
@@ -70,7 +70,9 @@ export default class RoleController extends Controller implements CRUD {
 			JOIN department ON role.department_id = department.id;
 			`;
 			const results = await this.fetch(query);
-			return results.rows.map((row) => new Role(row.title, parseFloat(row.salary), row.department_name, row.id, new Date(row.created_at), new Date(row.updated_at)).toObject());
+			return results.rows.map((row) =>
+				new Role(row.title, parseFloat(row.salary), row.department_name, row.id, new Date(row.created_at), new Date(row.updated_at)).toObject(),
+			);
 		} catch (error) {
 			const ERROR = <Error>error;
 			throw new Error(ERROR.message);
@@ -87,7 +89,7 @@ export default class RoleController extends Controller implements CRUD {
 	async update(fields: Partial<RoleUpdatable>): Promise<Role> {
 		if (!this.role) throw new Error('Role is not defined');
 		try {
-			const values = [fields.title ?? this.role.title, fields.salary ?? this.role.salary, fields.departmentId ?? this.role.departmentId, this.role.id];
+			const values = [fields.title ?? this.role.title, fields.salary ?? this.role.salary, fields.departmentId ?? this.role.department, this.role.id];
 			const query = 'UPDATE role SET title = COALESCE($1, title), salary = COALESCE($2, salary), department_id = COALESCE($3, department_id) WHERE id=$4 RETURNING *;';
 			await this.fetch(query, values);
 			return this.readOne(this.role.id!);
