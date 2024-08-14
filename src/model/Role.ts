@@ -4,14 +4,14 @@ import Base from './Base';
 export default class Role extends Base {
 	#title: string;
 	#salary: number;
-	#departmentId: number;
+	#department: number;
 
 	constructor(title: string, salary: number, departmentId: number, id?: number, createdAt?: Date, updatedAt?: Date) {
 		super(id, createdAt, updatedAt);
 
 		this.#title = title;
 		this.#salary = salary;
-		this.#departmentId = departmentId;
+		this.#department = departmentId;
 	}
 
 	get title() {
@@ -30,12 +30,12 @@ export default class Role extends Base {
 		this.#salary = value;
 	}
 
-	get departmentId() {
-		return this.#departmentId;
+	get department() {
+		return this.#department;
 	}
 
-	set departmentId(value: number) {
-		this.#departmentId = value;
+	set department(value: number) {
+		this.#department = value;
 	}
 
 	override toObject(): Role {
@@ -43,9 +43,9 @@ export default class Role extends Base {
 			id: this.id,
 			title: this.title,
 			salary: this.salary,
-			departmentId: this.departmentId,
-			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
-			updatedAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
+			department: this.department,
+			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
+			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 		};
 	}
 }

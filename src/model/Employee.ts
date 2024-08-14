@@ -1,62 +1,73 @@
-import { DateTime } from "luxon";
-import Base from "./Base";
+import { DateTime } from 'luxon';
+import Base from './Base';
 
 export default class Employee extends Base {
-    #firstName: string;
-    #lastName: string;
-    #roleId: number | string;
-    #managerId: number | string;
+	#firstName: string;
+	#lastName: string;
+	#role: number | string;
+	#manager: number | string;
+	#salary: number | undefined;
 
-    constructor(firstName: string, lastName: string, roleId: number | string, managerId: number | string, id?: number, createdAt?: Date, updatedAt?: Date) {
-        super(id, createdAt, updatedAt);
+	constructor(firstName: string, lastName: string, roleId: number | string, managerId: number | string, id?: number, createdAt?: Date, updatedAt?: Date, salary?: number) {
+		super(id, createdAt, updatedAt);
 
-        this.#firstName = firstName;
-        this.#lastName = lastName;
-        this.#roleId = roleId;
-        this.#managerId = managerId;
-    }
+		this.#firstName = firstName;
+		this.#lastName = lastName;
+		this.#role = roleId;
+		this.#manager = managerId;
+		this.#salary = salary;
+	}
 
-    get firstName(): string {
-        return this.#firstName;
-    }
+	get firstName(): string {
+		return this.#firstName;
+	}
 
-    set firstName(value: string) {
-        this.#firstName = value;
-    }
+	set firstName(value: string) {
+		this.#firstName = value;
+	}
 
-    get lastName(): string {
-        return this.#lastName;
-    }
+	get lastName(): string {
+		return this.#lastName;
+	}
 
-    set lastName(value: string) {
-        this.#lastName = value;
-    }
+	set lastName(value: string) {
+		this.#lastName = value;
+	}
 
-    get roleId(): number | string {
-        return this.#roleId;
-    }
+	get role(): number | string {
+		return this.#role;
+	}
 
-    set roleId(value: number) {
-        this.#roleId = value;
-    }
+	set role(value: number) {
+		this.#role = value;
+	}
 
-    get managerId(): number | string {
-        return this.#managerId;
-    }
+	get manager(): number | string {
+		return this.#manager;
+	}
 
-    set managerId(value: number) {
-        this.#managerId = value;
-    }
+	set manager(value: number) {
+		this.#manager = value;
+	}
 
-    override toObject(): Employee {
-        return <Employee> {
-            id: this.id,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            roleId: this.roleId,
-            managerId: this.managerId,
-			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
-			updatedAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
-        }
-    }
+	get salary() {
+		return this.#salary;
+	}
+
+	set salary(value: number | undefined) {
+		this.#salary = value;
+	}
+
+	override toObject(): Employee {
+		return <Employee>{
+			id: this.id,
+			firstName: this.firstName,
+			lastName: this.lastName,
+			role: this.role,
+			salary: this.salary,
+			manager: this.manager,
+			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
+			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
+		};
+	}
 }

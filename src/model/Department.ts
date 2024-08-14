@@ -22,8 +22,8 @@ export default class Department extends Base {
 		return <Department>{
 			id: this.id,
 			name: this.name,
-			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
-			updatedAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd'),
+			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
+			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 		};
 	}
 }
