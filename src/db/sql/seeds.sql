@@ -59,3 +59,10 @@ FROM employee
 JOIN role ON employee.role_id = role.id
 LEFT JOIN employee AS manager ON employee.manager_id = manager.id
 WHERE employee.id = 1;
+
+SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_name, role.salary,
+	CASE WHEN manager.id IS NULL THEN 'NONE' ELSE CONCAT(manager.first_name, ' ', manager.last_name) END AS manager_full_name, 
+	employee.created_at, employee.updated_at
+FROM employee
+JOIN role ON employee.role_id = role.id
+LEFT JOIN employee AS manager ON employee.manager_id = 1;
