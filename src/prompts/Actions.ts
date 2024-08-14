@@ -36,6 +36,21 @@ export default class Actions {
 		return this.#actionsInstance;
 	}
 
+	private async getManagerList(): Promise<Array<{ name: string; value: number; }>> {
+		const managerList = (await this.#employeeController.readAll())
+			.filter((employee) => {
+				if (employee.role === 'Manager' || employee.role === 'Assistant Manager') return employee;
+			})
+			.map((emp) => ({ name: `${emp.firstName} ${emp.lastName}`, value: emp.id ?? 0 }));
+
+		return managerList;
+	}
+
+	private async getRoleList() {
+		const roleList = (await this.#roleController.readAll()).map((role) => ({ name: role.title, value: role.id ?? 0 }));
+		return roleList;
+	}
+
 	private async viewAllDepartments() {
 		Title('All Departments');
 		console.table(await this.#departmentController.readAll());
@@ -80,14 +95,11 @@ export default class Actions {
 	}
 
 	private async addEmployee() {
-		const roleList = (await this.#roleController.readAll()).map((role) => ({ name: role.title, value: role.id ?? 0 }));
-		const managerList = (await this.#employeeController.readAll())
-			.filter((employee) => employee.role === 'Manager')
-			.map((emp) => ({ name: `${emp.firstName} ${emp.lastName}`, value: emp.id ?? 0 }));
-
 		Title('Add Employee');
 		console.table(await this.#employeeController.readAll());
 
+		const roleList = await this.getRoleList();
+		const managerList = await this.getManagerList();
 		this.#response = await inquirer.prompt(<any>newEmployee(roleList, managerList));
 
 		if (this.#response.role !== 1 && this.#response.manager === null) {
@@ -104,14 +116,11 @@ export default class Actions {
 	}
 
 	private async updateEmployeeRole() {
-		const roleList = (await this.#roleController.readAll()).map((role) => ({ name: role.title, value: role.id ?? 0 }));
-		const managerList = (await this.#employeeController.readAll())
-			.filter((employee) => employee.role === 'Manager')
-			.map((emp) => ({ name: `${emp.firstName} ${emp.lastName}`, value: emp.id ?? 0 }));
-
 		Title('Update Employee Role');
 		console.table(await this.#employeeController.readAll());
 
+		const roleList = await this.getRoleList();
+		const managerList = await this.getManagerList();
 		this.#response = await inquirer.prompt(<any>updateEmployee(roleList, managerList));
 
 		if (this.#response.role !== 1 && this.#response.manager === null) {

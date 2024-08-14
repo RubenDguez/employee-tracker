@@ -41,6 +41,14 @@ DO $$
             FOREIGN KEY (manager_id) REFERENCES employee (id)
         );
 
+        CREATE TABLE login (
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(30) UNIQUE NOT NULL,
+            userpassword VARCHAR(30) NOT NULL,
+            employee_id INTEGER NOT NULL,
+            FOREIGN KEY (employee_id) REFERENCES employee(id)
+        );
+
     RAISE NOTICE 'TRANSACTION COMPLETED';
 
     EXCEPTION WHEN OTHERS THEN

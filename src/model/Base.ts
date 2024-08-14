@@ -2,11 +2,15 @@ export default abstract class Base {
 	#id: number | null;
 	#createdAt: TDate;
 	#updatedAt: TDate;
+	#createdBy: string | null;
+	#updatedBy: string | null;
 
-	constructor(id?: number, createdAt?: Date, updatedAt?: Date) {
+	constructor(id?: number, createdAt?: Date, updatedAt?: Date, createdBy?: string, updatedBy?: string) {
 		this.#id = id ?? null;
 		this.#createdAt = createdAt ?? null;
 		this.#updatedAt = updatedAt ?? null;
+		this.#createdBy = createdBy ?? null;
+		this.#updatedBy = updatedBy ?? null;
 	}
 
 	get id(): number | null {
@@ -31,6 +35,22 @@ export default abstract class Base {
 
 	set updatedAt(value: Date) {
 		this.#updatedAt = value;
+	}
+
+	get createdBy(): string | null {
+		return this.#createdBy;
+	}
+
+	set createdBy(value: string | null) {
+		this.#createdBy = value;
+	}
+
+	get updatedBy(): string | null {
+		return this.#updatedBy;
+	}
+
+	set updatedBy(value: string | null) {
+		this.#updatedBy = value;
 	}
 
 	abstract toObject(): any;

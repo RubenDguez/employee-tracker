@@ -19,13 +19,26 @@ DO $$
 
         INSERT INTO role (title, salary, department_id)
         VALUES 
-            ('Manager', 65000, 1),
+            ('General Manager', 150000, 1),
+            ('Store Manager', 100000, 1),
+            ('Assistant Manager', 90000, 1),
             ('Cashier', 30000, 1),
-            ('Luthier', 65000, 2);
+            ('Electric Guitar Luthier', 65000, 2),
+            ('Acoustic Guitar Luthier', 65000, 4);
 
         INSERT INTO employee (first_name, last_name, role_id, manager_id)
         VALUES
-            ('Argenis', 'Dominguez', 1, null);
+            ('Argenis', 'Dominguez', 1, null),
+            ('Ruben', 'Dominguez', 2, 1),
+            ('Lisa', 'Freiwald', 3, 2),
+            ('Alexander', 'Ramhit', 4, 3);
+
+        INSERT INTO login (username, userpassword, employee_id)
+        VALUES
+            ('argenisdominguez', 'pass', 1),
+            ('rubendominguez', 'pass', 2),
+            ('lisafreiwald', 'pass', 3),
+            ('alexander', 'pass', 4);
 
     RAISE NOTICE 'TRANSACTION COMPLETED';
 
@@ -34,35 +47,3 @@ DO $$
         ROLLBACK;
 
 END $$;
-
-
-SELECT role.id, role.title, role.salary, department.name AS department_name, role.created_at, role.updated_at
-FROM role
-JOIN department ON role.department_id = department.id;
-
-SELECT role.id, role.title, role.salary, department.name AS department_name, role.created_at, role.updated_at
-FROM role
-JOIN department ON role.department_id = department.id
-WHERE role.id = 1;
-
-SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_name, 
-    CASE WHEN manager.id IS NULL THEN 'NONE' ELSE CONCAT(manager.first_name, ' ', manager.last_name) END AS manager_full_name, 
-    employee.created_at, employee.updated_at
-FROM employee
-JOIN role ON employee.role_id = role.id
-LEFT JOIN employee AS manager ON employee.manager_id = manager.id;
-
-SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_name, 
-    CASE WHEN manager.id IS NULL THEN 'NONE' ELSE CONCAT(manager.first_name, ' ', manager.last_name) END AS manager_full_name, 
-    employee.created_at, employee.updated_at
-FROM employee
-JOIN role ON employee.role_id = role.id
-LEFT JOIN employee AS manager ON employee.manager_id = manager.id
-WHERE employee.id = 1;
-
-SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_name, role.salary,
-	CASE WHEN manager.id IS NULL THEN 'NONE' ELSE CONCAT(manager.first_name, ' ', manager.last_name) END AS manager_full_name, 
-	employee.created_at, employee.updated_at
-FROM employee
-JOIN role ON employee.role_id = role.id
-LEFT JOIN employee AS manager ON employee.manager_id = 1;
