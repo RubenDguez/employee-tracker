@@ -7,7 +7,7 @@ import Title from './Title';
 import Department from '../model/Department';
 import { newRole } from './Role';
 import Role from '../model/Role';
-import { newEmployee } from './Employee';
+import { newEmployee, updateEmployee } from './Employee';
 import Employee from '../model/Employee';
 
 export default class Actions {
@@ -37,22 +37,22 @@ export default class Actions {
 	}
 
 	private async viewAllDepartments() {
-		Title();
+		Title('All Departments');
 		console.table(await this.#departmentController.readAll());
 	}
 
 	private async viewAllRoles() {
-		Title();
+		Title('All Roles');
 		console.table(await this.#roleController.readAll());
 	}
 
 	private async viewAllEmployees() {
-		Title();
+		Title('All Employees');
 		console.table(await this.#employeeController.readAll());
 	}
 
 	private async addDepartment() {
-		Title();
+		Title('Add Department');
 		console.table(await this.#departmentController.readAll());
 
 		this.#response = await inquirer.prompt(<any>newDepartment());
@@ -60,32 +60,34 @@ export default class Actions {
 		this.#departmentController = new DepartmentController(this.#department);
 		await this.#departmentController.create();
 
-		Title();
+		Title('Add Department');
 		console.table(await this.#departmentController.readAll());
 	}
 
 	private async addRole() {
 		const departmentList = (await this.#departmentController.readAll()).map((department) => ({ name: department.name, value: department.id ?? 0 }));
-		
-		Title();
+
+		Title('Add Role');
 		console.table(await this.#roleController.readAll());
 
 		this.#response = await inquirer.prompt(<any>newRole(departmentList));
 		this.#role = new Role(this.#response.name, parseFloat(this.#response.salary), this.#response.department);
 		this.#roleController = new RoleController(this.#role);
 		await this.#roleController.create();
-		
-		Title();
+
+		Title('Add Role');
 		console.table(await this.#roleController.readAll());
 	}
 
 	private async addEmployee() {
 		const roleList = (await this.#roleController.readAll()).map((role) => ({ name: role.title, value: role.id ?? 0 }));
-		const managerList = (await this.#employeeController.readAll()).filter((employee) => (employee.roleId === 'Manager')).map((emp) => ({name: `${emp.firstName} ${emp.lastName}`, value: emp.id ?? 0}));
-		
-		Title();
+		const managerList = (await this.#employeeController.readAll())
+			.filter((employee) => employee.role === 'Manager')
+			.map((emp) => ({ name: `${emp.firstName} ${emp.lastName}`, value: emp.id ?? 0 }));
+
+		Title('Add Employee');
 		console.table(await this.#employeeController.readAll());
-		
+
 		this.#response = await inquirer.prompt(<any>newEmployee(roleList, managerList));
 
 		if (this.#response.role !== 1 && this.#response.manager === null) {
@@ -97,7 +99,33 @@ export default class Actions {
 		this.#employeeController = new EmployeeController(this.#employee);
 		this.#employeeController.create();
 
-		Title();
+		Title('Add Employee');
+		console.table(await this.#employeeController.readAll());
+	}
+
+	private async updateEmployeeRole() {
+		const roleList = (await this.#roleController.readAll()).map((role) => ({ name: role.title, value: role.id ?? 0 }));
+		const managerList = (await this.#employeeController.readAll())
+			.filter((employee) => employee.role === 'Manager')
+			.map((emp) => ({ name: `${emp.firstName} ${emp.lastName}`, value: emp.id ?? 0 }));
+
+		Title('Update Employee Role');
+		console.table(await this.#employeeController.readAll());
+
+		this.#response = await inquirer.prompt(<any>updateEmployee(roleList, managerList));
+
+		if (this.#response.role !== 1 && this.#response.manager === null) {
+			console.error('\nThis type of employee must have a manager.\n');
+			return;
+		}
+
+		const employee = await this.#employeeController.readOne(this.#response.id);
+
+		this.#employee = new Employee(employee.firstName, employee.lastName, employee.role, employee.manager, employee.id!);
+		this.#employeeController = new EmployeeController(this.#employee);
+		this.#employeeController.update({ roleId: this.#response.role, managerId: this.#response.manager });
+
+		Title('Update Employee Role');
 		console.table(await this.#employeeController.readAll());
 	}
 
@@ -120,6 +148,9 @@ export default class Actions {
 				break;
 			case 'Add an employee':
 				await this.addEmployee();
+				break;
+			case 'Update employee role':
+				await this.updateEmployeeRole();
 				break;
 			default:
 				return;
