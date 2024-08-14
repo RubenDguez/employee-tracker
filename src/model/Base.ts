@@ -1,9 +1,3 @@
-import Department from './Department';
-import Employee from './Employee';
-import Role from './Role';
-
-type TDate = Date | string | null
-
 export default abstract class Base {
 	#id: number | null;
 	#createdAt: TDate;
@@ -39,5 +33,5 @@ export default abstract class Base {
 		this.#updatedAt = value;
 	}
 
-	abstract toObject(): Role | Department | Employee;
+	abstract toObject(): any;
 }

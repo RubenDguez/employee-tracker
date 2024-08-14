@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import Base from './Base';
+import State, { EState } from '../store/state';
 
 export default class Role extends Base {
 	#title: string;
@@ -39,13 +40,19 @@ export default class Role extends Base {
 	}
 
 	override toObject(): Role {
-		return <Role>{
+		let role: Partial<Role> = {
 			id: this.id,
 			title: this.title,
-			salary: this.salary,
 			department: this.department,
+			salary: this.salary,
+		};
+
+		if (State.getInstance().get(EState.ROLE) === 'manager') role = {
+			...role,
 			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
-		};
+		}
+
+		return <Role>role;
 	}
 }
