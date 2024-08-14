@@ -60,6 +60,8 @@ export default class Employee extends Base {
 	}
 
 	override toObject(): Employee {
+		const STATE = State.getInstance();
+
 		let employee: Partial<Employee> = {
 			id: this.id,
 			firstName: this.firstName,
@@ -69,10 +71,16 @@ export default class Employee extends Base {
 			manager: this.manager,
 		}
 
-		if (State.getInstance().get(EState.ROLE) === 'manager') employee = {
+		if (STATE.get(EState.ROLE)?.includes('manager')) employee = {
 			...employee,
 			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
+		}
+
+		if (STATE.get(EState.ROLE)?.includes('general') || STATE.get(EState.ROLE)?.includes('store')) employee = {
+			...employee,
+			createdBy: 'placeholder',
+			updatedBy: 'placeholder',
 		}
 
 		return <Employee>employee;

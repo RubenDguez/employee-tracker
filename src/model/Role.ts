@@ -40,6 +40,8 @@ export default class Role extends Base {
 	}
 
 	override toObject(): Role {
+		const STATE = State.getInstance();
+
 		let role: Partial<Role> = {
 			id: this.id,
 			title: this.title,
@@ -47,10 +49,16 @@ export default class Role extends Base {
 			salary: this.salary,
 		};
 
-		if (State.getInstance().get(EState.ROLE) === 'manager') role = {
+		if (STATE.get(EState.ROLE)?.includes('manager')) role = {
 			...role,
 			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
+		}
+
+		if (STATE.get(EState.ROLE)?.includes('general') || STATE.get(EState.ROLE)?.includes('store')) role = {
+			...role,
+			createdBy: 'placeholder',
+			updatedBy: 'placeholder',
 		}
 
 		return <Role>role;
