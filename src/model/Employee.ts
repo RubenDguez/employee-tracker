@@ -71,16 +71,12 @@ export default class Employee extends Base {
 			manager: this.manager,
 		}
 
-		if (ROLE?.includes('manager')) employee = {
-			...employee,
-			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
-			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
-		}
-
-		if (ROLE?.includes('general') || ROLE?.includes('store')) employee = {
+		if (ROLE === 'general manager' || ROLE === 'store manager') employee = {
 			...employee,
 			createdBy: 'placeholder',
+			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 			updatedBy: 'placeholder',
+			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 		}
 
 		return <Employee>employee;
