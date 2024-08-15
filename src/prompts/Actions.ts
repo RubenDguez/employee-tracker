@@ -39,7 +39,7 @@ export default class Actions {
 	private async getManagerList(): Promise<Array<{ name: string; value: number; }>> {
 		const managerList = (await this.#employeeController.readAll())
 			.filter((employee) => {
-				if (employee.role === 'Manager' || employee.role === 'Assistant Manager') return employee;
+				if (employee.role === 'Store Manager' || employee.role === 'Assistant Manager') return employee;
 			})
 			.map((emp) => ({ name: `${emp.firstName} ${emp.lastName}`, value: emp.id ?? 0 }));
 

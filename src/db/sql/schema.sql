@@ -26,6 +26,7 @@ DO $$
             department_id INTEGER NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
             FOREIGN KEY (department_id) REFERENCES department(id)
         );
 
@@ -37,6 +38,7 @@ DO $$
             manager_id INTEGER,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
             FOREIGN KEY (role_id) REFERENCES role(id),
             FOREIGN KEY (manager_id) REFERENCES employee (id)
         );
@@ -46,7 +48,21 @@ DO $$
             username VARCHAR(30) UNIQUE NOT NULL,
             userpassword VARCHAR(30) NOT NULL,
             employee_id INTEGER NOT NULL,
+
             FOREIGN KEY (employee_id) REFERENCES employee(id)
+        );
+
+        CREATE TABLE department_transactions (
+            id SERIAL PRIMARY KEY,
+            department_id INTEGER UNIQUE NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            created_by INTEGER NOT NULL,
+            updated_by INTEGER NOT NULL,
+
+            FOREIGN KEY (department_id) REFERENCES department(id),
+            FOREIGN KEY (created_by) REFERENCES employee(id),
+            FOREIGN KEY (updated_by) REFERENCES employee(id)
         );
 
     RAISE NOTICE 'TRANSACTION COMPLETED';

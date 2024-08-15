@@ -49,16 +49,12 @@ export default class Role extends Base {
 			salary: ROLE?.includes('manager') ? this.salary : 0.00,
 		};
 
-		if (ROLE?.includes('manager')) role = {
-			...role,
-			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
-			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
-		}
-
-		if (ROLE?.includes('general') || ROLE?.includes('store')) role = {
+		if (ROLE === 'general manager' || ROLE === 'store manager') role = {
 			...role,
 			createdBy: 'placeholder',
+			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 			updatedBy: 'placeholder',
+			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 		}
 
 		return <Role>role;
