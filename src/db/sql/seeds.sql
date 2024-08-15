@@ -40,6 +40,26 @@ DO $$
             ('lisafreiwald', 'pass', 3),
             ('alexander', 'pass', 4);
 
+        INSERT INTO department_transactions (department_id, created_by, updated_by)
+        VALUES
+            (1, 1, 1),
+            (2, 1, 1),
+            (3, 1, 1),
+            (4, 1, 1),
+            (5, 1, 1),
+            (6, 1, 1),
+            (7, 1, 1),
+            (8, 1, 1),
+            (9, 1, 1),
+            (10, 1, 1),
+            (11, 1, 1),
+            (12, 1, 1),
+            (13, 1, 1);
+
+    UPDATE department_transactions
+    SET updated_by = 2, updated_at TIMESTAMP
+    WHERE department_id = 1;
+
     RAISE NOTICE 'TRANSACTION COMPLETED';
 
     EXCEPTION WHEN OTHERS THEN
