@@ -9,7 +9,7 @@ export default class Employee extends Base {
 	#manager: number | string;
 	#salary: number | undefined;
 
-	constructor(firstName: string, lastName: string, roleId: number | string, managerId: number | string, id?: number, createdAt?: Date, updatedAt?: Date, salary?: number) {
+	constructor(firstName: string, lastName: string, roleId: number | string, managerId: number | string, id?: number, createdAt?: Date, updatedAt?: Date, salary?: number, createdBy?: string, updatedBy?: string) {
 		super(id, createdAt, updatedAt);
 
 		this.#firstName = firstName;
@@ -17,6 +17,8 @@ export default class Employee extends Base {
 		this.#role = roleId;
 		this.#manager = managerId;
 		this.#salary = salary;
+		this.createdBy = createdBy ?? '';
+		this.updatedBy = updatedBy ?? '';
 	}
 
 	get firstName(): string {
@@ -73,9 +75,9 @@ export default class Employee extends Base {
 
 		if (ROLE === 'general manager' || ROLE === 'store manager') employee = {
 			...employee,
-			createdBy: 'placeholder',
+			createdBy: this.createdBy,
 			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
-			updatedBy: 'placeholder',
+			updatedBy: this.updatedBy,
 			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 		}
 

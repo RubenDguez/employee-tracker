@@ -16,6 +16,9 @@ DO $$
         INSERT INTO department_transactions (department_id, created_by, updated_by)
         VALUES (1, 1, 1);
 
+        INSERT INTO employee_transactions (employee_id, created_by, updated_by)
+        VALUES (1, 1, 1);
+
     RAISE NOTICE 'TRANSACTION COMPLETED';
 
     EXCEPTION WHEN OTHERS THEN
