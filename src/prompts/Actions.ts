@@ -131,8 +131,7 @@ export default class Actions {
 			await this.createLogin();
 		}
 
-		Title('New Employee List Employee');
-		console.table(await this.#employeeController.readAll());
+		await this.viewAllEmployees();
 	}
 
 	private async updateEmployeeRole() {
@@ -152,10 +151,8 @@ export default class Actions {
 
 		this.#employee = new Employee(employee.firstName, employee.lastName, employee.role, employee.manager, employee.id!);
 		this.#employeeController = new EmployeeController(this.#employee);
-		this.#employeeController.update({ roleId: this.#response.role, managerId: this.#response.manager });
-
-		Title('Update Employee Role');
-		console.table(await this.#employeeController.readAll());
+		await this.#employeeController.update({ roleId: this.#response.role, managerId: this.#response.manager });
+		await this.viewAllEmployees();
 	}
 
 	async act(action: string) {

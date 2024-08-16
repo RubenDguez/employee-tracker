@@ -27,7 +27,7 @@ export default class RoleController extends Controller implements CRUD {
 			const results = await this.fetch(query, values);
 			const row = results.rows[0];
 			this.role.id = row.id;
-			return new Role(row.title, parseFloat(row.salary), row.department_id, row.id, row.created_at, row.updated_at).toObject();
+			return new Role(row.title, parseFloat(row.salary), row.department_id, row.id).toObject();
 		} catch (error) {
 			const ERROR = <Error>error;
 			throw new Error(ERROR.message);
@@ -43,14 +43,14 @@ export default class RoleController extends Controller implements CRUD {
 		try {
 			const values = [id];
 			const query = `
-			SELECT role.id, role.title, role.salary, department.name AS department_name, role.created_at, role.updated_at
+			SELECT role.id, role.title, role.salary, department.name AS department_name
 			FROM role
 			JOIN department ON role.department_id = department.id
 			WHERE role.id = $1;
 			`;
 			const results = await this.fetch(query, values);
 			const row = results.rows[0];
-			return new Role(row.title, parseFloat(row.salary), row.department_name, row.id, new Date(row.created_at), new Date(row.updated_at)).toObject();
+			return new Role(row.title, parseFloat(row.salary), row.department_name, row.id).toObject();
 		} catch (error) {
 			const ERROR = <Error>error;
 			throw new Error(ERROR.message);
@@ -65,7 +65,7 @@ export default class RoleController extends Controller implements CRUD {
 	async readAll(): Promise<Array<Role>> {
 		try {
 			const query = `
-			SELECT role.id, role.title, role.salary, department.name AS department_name, role.created_at, role.updated_at
+			SELECT role.id, role.title, role.salary, department.name AS department_name
 			FROM role
 			JOIN department ON role.department_id = department.id;
 			`;

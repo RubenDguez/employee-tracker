@@ -14,9 +14,7 @@ DO $$
     BEGIN
         CREATE TABLE department (
             id SERIAL PRIMARY KEY,
-            name VARCHAR(30) UNIQUE NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            name VARCHAR(30) UNIQUE NOT NULL
         );
 
         CREATE TABLE role (
@@ -24,8 +22,6 @@ DO $$
             title VARCHAR(30) UNIQUE NOT NULL,
             salary NUMERIC(10, 2) NOT NULL CHECK (salary >= 0) DEFAULT 0.00,
             department_id INTEGER NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
             FOREIGN KEY (department_id) REFERENCES department(id)
         );
@@ -36,8 +32,6 @@ DO $$
             last_name VARCHAR(30) NOT NULL,
             role_id INTEGER NOT NULL,
             manager_id INTEGER,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
             FOREIGN KEY (role_id) REFERENCES role(id),
             FOREIGN KEY (manager_id) REFERENCES employee (id)
@@ -61,6 +55,19 @@ DO $$
             updated_by INTEGER NOT NULL,
 
             FOREIGN KEY (department_id) REFERENCES department(id),
+            FOREIGN KEY (created_by) REFERENCES employee(id),
+            FOREIGN KEY (updated_by) REFERENCES employee(id)
+        );
+
+        CREATE TABLE employee_transactions (
+            id SERIAL PRIMARY KEY,
+            employee_id INTEGER UNIQUE NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            created_by INTEGER NOT NULL,
+            updated_by INTEGER NOT NULL,
+
+            FOREIGN KEY (employee_id) REFERENCES employee(id),
             FOREIGN KEY (created_by) REFERENCES employee(id),
             FOREIGN KEY (updated_by) REFERENCES employee(id)
         );
