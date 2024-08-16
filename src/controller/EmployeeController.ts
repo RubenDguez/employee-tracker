@@ -1,4 +1,5 @@
 import Employee from '../model/Employee';
+import State, { EState } from '../store/state';
 import Controller from './Controller';
 
 export default class EmployeeController extends Controller implements CRUD {
@@ -22,14 +23,15 @@ export default class EmployeeController extends Controller implements CRUD {
 	async create(): Promise<Employee> {
 		if (!this.employee) throw new Error('Employee is not defined');
 		try {
+			const STATE = State.getInstance();
 			const values = [this.employee.firstName, this.employee.lastName, this.employee.role, this.employee.manager];
 			const createQuery = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4) RETURNING *;';
-
+			const transactionQuery = 'INSERT INTO employee_transactions (employee_id, created_by, updated_by) VALUES ($1, $2, $3);';
 			const results = await this.fetch(createQuery, values);
 			const row = results.rows[0];
 			this.employee.id = row.id;
-
-			return new Employee(row.first_name, row.last_name, row.role_id, row.manager_id, row.id, row.created_at, row.updated_at).toObject();
+			await this.fetch(transactionQuery, [this.employee.id, parseInt(STATE.get(EState.USER_ID)!), parseInt(STATE.get(EState.USER_ID)!)]);
+			return new Employee(row.first_name, row.last_name, row.role_id, row.manager_id, row.id).toObject();
 		} catch (error) {
 			const ERROR = <Error>error;
 			throw new Error(ERROR.message);
@@ -73,7 +75,7 @@ export default class EmployeeController extends Controller implements CRUD {
 			const query = `
 			SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_name, role.salary,
 				CASE WHEN manager.id IS NULL THEN 'NONE' ELSE CONCAT(manager.first_name, ' ', manager.last_name) END AS manager_full_name, 
-				employee.created_at, employee.updated_at,
+				employee_transactions.created_at, employee_transactions.updated_at,
 				department.name AS department_name,
 				CONCAT(created_by_employee.first_name, ' ', created_by_employee.last_name) AS created_by_full_name,
 				CONCAT(updated_by_employee.first_name, ' ', updated_by_employee.last_name) AS updated_by_full_name
@@ -87,7 +89,18 @@ export default class EmployeeController extends Controller implements CRUD {
 			`;
 			const results = await this.fetch(query);
 			return results.rows.map((row) =>
-				new Employee(row.first_name, row.last_name, row.role_name, row.manager_full_name, row.id, row.created_at, row.updated_at, row.salary, row.created_by_full_name, row.updated_by_full_name).toObject(),
+				new Employee(
+					row.first_name,
+					row.last_name,
+					row.role_name,
+					row.manager_full_name,
+					row.id,
+					row.created_at,
+					row.updated_at,
+					row.salary,
+					row.created_by_full_name,
+					row.updated_by_full_name,
+				).toObject(),
 			);
 		} catch (error) {
 			const ERROR = <Error>error;
@@ -116,8 +129,6 @@ export default class EmployeeController extends Controller implements CRUD {
 				'UPDATE employee SET first_name = COALESCE($1, first_name), last_name = COALESCE($2, last_name), role_id = COALESCE($3, role_id), manager_id = COALESCE($4, manager_id), updated_at = CURRENT_TIMESTAMP WHERE id=$5 RETURNING *;';
 			console.log(updateQuery);
 			await this.fetch(updateQuery, values);
-
-			
 
 			return this.readOne(this.employee.id!);
 		} catch (error) {
