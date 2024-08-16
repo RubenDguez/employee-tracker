@@ -11,7 +11,7 @@ DO $$
         VALUES ('Argenis', 'Dominguez', 1, null);
 
         INSERT INTO login (username, userpassword, employee_id)
-        VALUES ('argenisdominguez', 'pass', 1);
+        VALUES ('argenisdominguez', '69c3648f615b400e8b6cb04d7a20248d', 1);
 
         INSERT INTO department_transactions (department_id, created_by, updated_by)
         VALUES (1, 1, 1);

@@ -23,10 +23,12 @@ export default class EmployeeController extends Controller implements CRUD {
 		if (!this.employee) throw new Error('Employee is not defined');
 		try {
 			const values = [this.employee.firstName, this.employee.lastName, this.employee.role, this.employee.manager];
-			const query = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4) RETURNING *;';
-			const results = await this.fetch(query, values);
+			const createQuery = 'INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4) RETURNING *;';
+
+			const results = await this.fetch(createQuery, values);
 			const row = results.rows[0];
 			this.employee.id = row.id;
+
 			return new Employee(row.first_name, row.last_name, row.role_id, row.manager_id, row.id, row.created_at, row.updated_at).toObject();
 		} catch (error) {
 			const ERROR = <Error>error;

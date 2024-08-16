@@ -47,3 +47,10 @@ JOIN employee AS created_by ON department_transactions.created_by = created_by.i
 JOIN employee AS updated_by ON department_transactions.updated_by = updated_by.id
 JOIN department ON department_transactions.department_id = department.id
 WHERE department.id = 1;
+
+
+SELECT login.userpassword, employee.id, CONCAT(employee.first_name, ' ' ,employee.last_name) AS full_name, LOWER(role.title) AS title
+FROM login
+JOIN employee ON login.employee_id = employee.id
+JOIN role ON employee.role_id = role.id
+WHERE login.username = 'argenisdominguez';
