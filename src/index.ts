@@ -2,9 +2,10 @@ import inquirer from 'inquirer';
 import DB from './db';
 import Actions from './prompts/Actions';
 import Title from './prompts/Title';
-import Login from './prompts/Login';
+import { defPrompt } from './prompts/Login';
 import { main } from './prompts/Main';
 import LoginController from './controller/LoginController';
+
 const cTable = require('console.table');
 
 async function handleLogin(retries = 0): Promise<boolean> {
@@ -18,7 +19,7 @@ async function handleLogin(retries = 0): Promise<boolean> {
 	Title('Login');
 	const loginController = new LoginController();
 
-	const response = await inquirer.prompt(<any>Login);
+	const response = await inquirer.prompt(<any>defPrompt);
 	const success = await loginController.login(response.username, response.password);
 
 	if (!success) {

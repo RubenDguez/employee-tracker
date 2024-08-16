@@ -21,9 +21,9 @@ export default class DepartmentController extends Controller implements CRUD {
 	 * @throws {Error} Department is not defined
 	 */
 	async create(): Promise<Department> {
-		const STORE = State.getInstance();
-
 		if (!this.department) throw new Error('Department is not defined');
+
+		const STORE = State.getInstance();
 		try {
 			const values = [this.department.name];
 			const createQuery = 'INSERT INTO department (name) VALUES ($1) RETURNING *;';

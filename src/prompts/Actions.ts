@@ -9,6 +9,9 @@ import { newRole } from './Role';
 import Role from '../model/Role';
 import { newEmployee, updateEmployee } from './Employee';
 import Employee from '../model/Employee';
+import { newEmployeeForm, userIntent } from './Login';
+import CryptoJS from 'crypto-js';
+import LoginController from '../controller/LoginController';
 
 export default class Actions {
 	#response: any;
@@ -17,6 +20,7 @@ export default class Actions {
 	#departmentController: DepartmentController;
 	#roleController: RoleController;
 	#employeeController: EmployeeController;
+	#loginController: LoginController;
 
 	#department: Department | null = null;
 	#role: Role | null = null;
@@ -26,6 +30,7 @@ export default class Actions {
 		this.#departmentController = new DepartmentController();
 		this.#roleController = new RoleController();
 		this.#employeeController = new EmployeeController();
+		this.#loginController = new LoginController();
 	}
 
 	public static getInstance() {
@@ -36,10 +41,10 @@ export default class Actions {
 		return this.#actionsInstance;
 	}
 
-	private async getManagerList(): Promise<Array<{ name: string; value: number; }>> {
+	private async getManagerList(): Promise<Array<{ name: string; value: number }>> {
 		const managerList = (await this.#employeeController.readAll())
 			.filter((employee) => {
-				if (employee.role === 'Store Manager' || employee.role === 'Assistant Manager') return employee;
+				if (employee.role === 'General Manager' || employee.role === 'Store Manager' || employee.role === 'Assistant Manager') return employee;
 			})
 			.map((emp) => ({ name: `${emp.firstName} ${emp.lastName}`, value: emp.id ?? 0 }));
 
@@ -94,9 +99,18 @@ export default class Actions {
 		console.table(await this.#roleController.readAll());
 	}
 
+	private async createLogin() {
+		this.#response = await inquirer.prompt(<any>newEmployeeForm);
+		console.log(this.#response);
+
+		const username = this.#response.username;
+		const password = CryptoJS.MD5(this.#response.username + this.#response.password).toString();
+
+		await this.#loginController.create(username, password, <number>this.#employee?.id);
+	}
+
 	private async addEmployee() {
 		Title('Add Employee');
-		console.table(await this.#employeeController.readAll());
 
 		const roleList = await this.getRoleList();
 		const managerList = await this.getManagerList();
@@ -109,9 +123,15 @@ export default class Actions {
 
 		this.#employee = new Employee(this.#response.firstName, this.#response.lastName, this.#response.role, this.#response.manager);
 		this.#employeeController = new EmployeeController(this.#employee);
-		this.#employeeController.create();
+		this.#employee = await this.#employeeController.create();
 
-		Title('Add Employee');
+		this.#response = await inquirer.prompt(<any>userIntent);
+
+		if (this.#response.usingApp) {
+			await this.createLogin();
+		}
+
+		Title('New Employee List Employee');
 		console.table(await this.#employeeController.readAll());
 	}
 

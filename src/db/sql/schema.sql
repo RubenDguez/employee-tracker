@@ -45,8 +45,8 @@ DO $$
 
         CREATE TABLE login (
             id SERIAL PRIMARY KEY,
-            username VARCHAR(30) UNIQUE NOT NULL,
-            userpassword VARCHAR(30) NOT NULL,
+            username VARCHAR(50) UNIQUE NOT NULL,
+            userpassword VARCHAR(100) NOT NULL,
             employee_id INTEGER NOT NULL,
 
             FOREIGN KEY (employee_id) REFERENCES employee(id)
