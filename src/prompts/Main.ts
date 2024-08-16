@@ -39,6 +39,8 @@ const main = () => {
 	// Exit option always at the end of the list
 	choices = [
 		...choices,
+		'log out',
+		new inquirer.Separator(),
 		'exit',
 		new inquirer.Separator(),
 	]

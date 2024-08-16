@@ -35,4 +35,12 @@ export default class State {
     get(key: string): string | undefined {
         return this._store.get(key);
     }
+
+    /**
+     * Clear the store
+     * @return {void}
+     */
+    clear(): void {
+        this._store.clear();
+    }
 }

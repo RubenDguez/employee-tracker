@@ -5,10 +5,11 @@ import Title from './prompts/Title';
 import { defPrompt } from './prompts/Login';
 import { main } from './prompts/Main';
 import LoginController from './controller/LoginController';
+import State, { EState } from './store/state';
 
 const cTable = require('console.table');
 
-async function handleLogin(retries = 0): Promise<boolean> {
+async function handleLogin(retries = 0): Promise<void> {
 	const RETRIES = retries;
 
 	if (retries >= 3) {
@@ -19,14 +20,12 @@ async function handleLogin(retries = 0): Promise<boolean> {
 	Title('Login');
 	const loginController = new LoginController();
 
-	const response = await inquirer.prompt(<any>defPrompt);
+	let response = await inquirer.prompt(<any>defPrompt);
 	const success = await loginController.login(response.username, response.password);
 
 	if (!success) {
 		await handleLogin(RETRIES + 1);
 	}
-
-	return false;
 }
 
 async function init() {
@@ -39,6 +38,11 @@ async function init() {
 		do {
 			choice = (await inquirer.prompt(<any>main())).mainOption;
 			await Actions.getInstance().act(choice);
+
+			if (choice === 'log out') {
+				State.getInstance().clear();
+				await init();
+			}
 		} while (choice !== 'exit');
 		Title('Thanks for using this app 🤗 ❤️ 🙏');
 		process.exit(0);

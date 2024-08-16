@@ -37,3 +37,7 @@ JOIN department ON role.department_id = department.id
 JOIN employee_transactions ON employee.id = employee_transactions.employee_id
 JOIN employee AS created_by_employee ON employee_transactions.created_by = created_by_employee.id
 JOIN employee AS updated_by_employee ON employee_transactions.updated_by = updated_by_employee.id;
+
+
+
+UPDATE employee_transactions SET updated_at = COALESCE(CURRENT_TIMESTAMP, updated_at), updated_by = COALESCE(1, updated_by) WHERE employee_id = 1;
