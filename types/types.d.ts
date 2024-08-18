@@ -1,1 +1,1 @@
-type TDate = Date | string | null
+type TDate = Date | string | null;

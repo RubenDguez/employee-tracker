@@ -1,24 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface CRUD {
-	create: () => Promise;
-	readAll: () => Promise<Array>;
-	readOne: (id: number) => Promise;
-	update: (obj: any) => Promise;
-	delete: (id: number) => Promise<boolean>;
+  create: () => Promise;
+  readAll: () => Promise<Array>;
+  readOne: (id: number) => Promise;
+  update: (obj: any) => Promise;
+  delete: (id: number) => Promise<boolean>;
 }
 
 interface RoleUpdatable {
-	title: string;
-	salary: number;
-	departmentId: number;
+  title: string;
+  salary: number;
+  departmentId: number;
 }
 
 interface DepartmentUpdatable {
-	name: string;
+  name: string;
 }
 
 interface EmployeeUpdatable {
-    firstName: string;
-    lastName: string;
-    roleId: number;
-    managerId: number;
+  firstName: string;
+  lastName: string;
+  roleId: number;
+  managerId: number;
 }
