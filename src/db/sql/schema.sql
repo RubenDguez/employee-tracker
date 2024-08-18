@@ -59,6 +59,19 @@ DO $$
             FOREIGN KEY (updated_by) REFERENCES employee(id)
         );
 
+        CREATE TABLE role_transactions (
+            id SERIAL PRIMARY KEY,
+            role_id INTEGER UNIQUE NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            created_by INTEGER NOT NULL,
+            updated_by INTEGER NOT NULL,
+
+            FOREIGN KEY (role_id) REFERENCES role(id),
+            FOREIGN KEY (created_by) REFERENCES employee(id),
+            FOREIGN KEY (updated_by) REFERENCES employee(id)
+        );
+
         CREATE TABLE employee_transactions (
             id SERIAL PRIMARY KEY,
             employee_id INTEGER UNIQUE NOT NULL,

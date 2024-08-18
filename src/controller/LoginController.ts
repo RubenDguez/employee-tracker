@@ -1,4 +1,5 @@
 import State, { EState } from "../store/state";
+import EmployeeTrackerError from "../utils/Error";
 import Controller from "./Controller"
 import CryptoJS from 'crypto-js';
 
@@ -32,7 +33,7 @@ export default class LoginController extends Controller {
 
             return true;
         } catch (error) {
-            const ERROR = <Error>error;
+            const ERROR = <EmployeeTrackerError>error;
             throw new Error(ERROR.message);
         }
     }
@@ -48,7 +49,7 @@ export default class LoginController extends Controller {
 
             return true;
         } catch (error) {
-            const ERROR = <Error>error;
+            const ERROR = <EmployeeTrackerError>error;
             throw new Error(ERROR.message);
         }
     }

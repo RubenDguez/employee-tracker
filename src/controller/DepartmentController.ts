@@ -1,5 +1,6 @@
 import Department from '../model/Department';
 import State, { EState } from '../store/state';
+import EmployeeTrackerError from '../utils/Error';
 import Controller from './Controller';
 
 export default class DepartmentController extends Controller implements CRUD {
@@ -38,7 +39,7 @@ export default class DepartmentController extends Controller implements CRUD {
 			await this.fetch(transactionQuery, [row.id, parseInt(STORE.get(EState.USER_ID)!), parseInt(STORE.get(EState.USER_ID)!)]);
 			return new Department(row.name, row.id, row.created_at, row.updated_at).toObject();
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -66,7 +67,7 @@ export default class DepartmentController extends Controller implements CRUD {
 			const row = results.rows[0];
 			return new Department(row.department_name, row.id, new Date(row.created_at), new Date(row.updated_at), row.created_by_full_name, row.updated_by_full_name).toObject();
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -91,7 +92,7 @@ export default class DepartmentController extends Controller implements CRUD {
 			const results = await this.fetch(query);
 			return results.rows.map((row) => new Department(row.department_name, row.id, new Date(row.created_at), new Date(row.updated_at), row.created_by_full_name, row.updated_by_full_name).toObject());
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -118,7 +119,7 @@ export default class DepartmentController extends Controller implements CRUD {
 			await this.fetch(updateTransactions, [parseInt(STATE.get(EState.USER_ID)!), this.department.id])
 			return this.readOne(this.department.id!);
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -137,7 +138,7 @@ export default class DepartmentController extends Controller implements CRUD {
 			await this.fetch(query, values);
 			return true;
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}

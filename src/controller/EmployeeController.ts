@@ -1,5 +1,6 @@
 import Employee from '../model/Employee';
 import State, { EState } from '../store/state';
+import EmployeeTrackerError from '../utils/Error';
 import Controller from './Controller';
 
 export default class EmployeeController extends Controller implements CRUD {
@@ -33,7 +34,7 @@ export default class EmployeeController extends Controller implements CRUD {
 			await this.fetch(transactionQuery, [this.employee.id, parseInt(STATE.get(EState.USER_ID)!), parseInt(STATE.get(EState.USER_ID)!)]);
 			return new Employee(row.first_name, row.last_name, row.role_id, row.manager_id, row.id).toObject();
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -67,7 +68,7 @@ export default class EmployeeController extends Controller implements CRUD {
 			const row = results.rows[0];
 			return new Employee(row.first_name, row.last_name, row.role_id, row.manager_id, row.id, row.created_at, row.updated_at).toObject();
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -110,7 +111,7 @@ export default class EmployeeController extends Controller implements CRUD {
 				).toObject(),
 			);
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -142,7 +143,7 @@ export default class EmployeeController extends Controller implements CRUD {
 			await this.fetch(updateTransaction, updateTransactionValues);
 			return this.readOne(this.employee.id!);
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -161,7 +162,7 @@ export default class EmployeeController extends Controller implements CRUD {
 			await this.fetch(query, values);
 			return true;
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
