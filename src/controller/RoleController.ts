@@ -1,4 +1,6 @@
 import Role from '../model/Role';
+import State, { EState } from '../store/state';
+import EmployeeTrackerError from '../utils/Error';
 import Controller from './Controller';
 
 export default class RoleController extends Controller implements CRUD {
@@ -22,14 +24,18 @@ export default class RoleController extends Controller implements CRUD {
 	async create(): Promise<Role> {
 		if (!this.role) throw new Error('Role is not defined');
 		try {
+			const STATE = State.getInstance();
 			const values = [this.role.title, this.role.salary, this.role.department];
-			const query = 'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3) RETURNING *;';
-			const results = await this.fetch(query, values);
+			const createQuery = 'INSERT INTO role (title, salary, department_id) VALUES ($1, $2, $3) RETURNING *;';
+			const transactionQuery = 'INSERT INTO role_transactions (role_id, created_by, updated_by) VALUES ($1, $2, $3);';
+			const results = await this.fetch(createQuery, values);
 			const row = results.rows[0];
 			this.role.id = row.id;
+
+			await this.fetch(transactionQuery, [row.id, parseInt(STATE.get(EState.USER_ID)!), parseInt(STATE.get(EState.USER_ID)!)]);
 			return new Role(row.title, parseFloat(row.salary), row.department_id, row.id).toObject();
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -43,16 +49,22 @@ export default class RoleController extends Controller implements CRUD {
 		try {
 			const values = [id];
 			const query = `
-			SELECT role.id, role.title, role.salary, department.name AS department_name
+			SELECT role.id, role.title, role.salary, department.name AS department_name,
+				CONCAT(created_by_employee.first_name, ' ', created_by_employee.last_name) AS created_by_full_name,
+				CONCAT(updated_by_employee.first_name, ' ', updated_by_employee.last_name) AS updated_by_full_name,
+				role_transactions.created_at, role_transactions.updated_at
 			FROM role
 			JOIN department ON role.department_id = department.id
+			JOIN role_transactions ON role.id = role_transactions.role_id
+			JOIN employee AS created_by_employee ON role_transactions.created_by = created_by_employee.id
+			JOIN employee AS updated_by_employee ON role_transactions.updated_by = updated_by_employee.id
 			WHERE role.id = $1;
 			`;
 			const results = await this.fetch(query, values);
 			const row = results.rows[0];
 			return new Role(row.title, parseFloat(row.salary), row.department_name, row.id).toObject();
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -65,16 +77,31 @@ export default class RoleController extends Controller implements CRUD {
 	async readAll(): Promise<Array<Role>> {
 		try {
 			const query = `
-			SELECT role.id, role.title, role.salary, department.name AS department_name
+			SELECT role.id, role.title, role.salary, department.name AS department_name,
+				CONCAT(created_by_employee.first_name, ' ', created_by_employee.last_name) AS created_by_full_name,
+				CONCAT(updated_by_employee.first_name, ' ', updated_by_employee.last_name) AS updated_by_full_name,
+				role_transactions.created_at, role_transactions.updated_at
 			FROM role
-			JOIN department ON role.department_id = department.id;
+			JOIN department ON role.department_id = department.id
+			JOIN role_transactions ON role.id = role_transactions.role_id
+			JOIN employee AS created_by_employee ON role_transactions.created_by = created_by_employee.id
+			JOIN employee AS updated_by_employee ON role_transactions.updated_by = updated_by_employee.id;
 			`;
 			const results = await this.fetch(query);
 			return results.rows.map((row) =>
-				new Role(row.title, parseFloat(row.salary), row.department_name, row.id, new Date(row.created_at), new Date(row.updated_at)).toObject(),
+				new Role(
+					row.title,
+					parseFloat(row.salary),
+					row.department_name,
+					row.id,
+					new Date(row.created_at),
+					new Date(row.updated_at),
+					row.created_by_full_name,
+					row.updated_by_full_name,
+				).toObject(),
 			);
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -94,7 +121,7 @@ export default class RoleController extends Controller implements CRUD {
 			await this.fetch(query, values);
 			return this.readOne(this.role.id!);
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}
@@ -113,7 +140,7 @@ export default class RoleController extends Controller implements CRUD {
 			await this.fetch(query, values);
 			return true;
 		} catch (error) {
-			const ERROR = <Error>error;
+			const ERROR = <EmployeeTrackerError>error;
 			throw new Error(ERROR.message);
 		}
 	}

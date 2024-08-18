@@ -7,12 +7,14 @@ export default class Role extends Base {
 	#salary: number;
 	#department: number;
 
-	constructor(title: string, salary: number, departmentId: number, id?: number, createdAt?: Date, updatedAt?: Date) {
+	constructor(title: string, salary: number, departmentId: number, id?: number, createdAt?: Date, updatedAt?: Date, createdBy?: string, updatedBy?: string) {
 		super(id, createdAt, updatedAt);
 
 		this.#title = title;
 		this.#salary = salary;
 		this.#department = departmentId;
+		this.createdBy = createdBy ?? '';
+		this.updatedBy = updatedBy ?? '';
 	}
 
 	get title() {
@@ -51,9 +53,9 @@ export default class Role extends Base {
 
 		if (ROLE === 'general manager' || ROLE === 'store manager') role = {
 			...role,
-			createdBy: 'placeholder',
+			createdBy: this.createdBy,
 			createdAt: DateTime.fromJSDate(new Date(this.createdAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
-			updatedBy: 'placeholder',
+			updatedBy: this.updatedBy,
 			updatedAt: DateTime.fromJSDate(new Date(this.updatedAt!)).toFormat('yyyy LLL dd - HH:mm:ss'),
 		}
 

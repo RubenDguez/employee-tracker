@@ -1,5 +1,6 @@
 import { QueryResult } from 'pg';
 import DB from '../db';
+import EmployeeTrackerError from '../utils/Error';
 
 export default class Controller {
 	/**
@@ -13,7 +14,7 @@ export default class Controller {
 			const res = await conn.query(query, values);
 			return res;
 		} catch (err) {
-			const ERROR = <Error>err;
+			const ERROR = <EmployeeTrackerError>err;
 			throw new Error(ERROR.message);
 		}
 	}

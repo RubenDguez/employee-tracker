@@ -1,6 +1,7 @@
 import { Pool, PoolClient } from 'pg';
 import * as dotenv from 'dotenv';
 import path from 'path';
+import EmployeeTrackerError from '../utils/Error';
 
 dotenv.config({ path: path.join(process.cwd(), 'db.env') });
 
@@ -40,7 +41,7 @@ export default class DB {
 			console.warn('\nDB is now connected...\n');
 			return this.#connection;
 		} catch (err) {
-			const ERROR = <Error>err;
+			const ERROR = <EmployeeTrackerError>err;
 			throw new Error(ERROR.message);
 		}
 	}

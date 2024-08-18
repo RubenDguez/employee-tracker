@@ -6,6 +6,7 @@ import { defPrompt } from './prompts/Login';
 import { main } from './prompts/Main';
 import LoginController from './controller/LoginController';
 import State, { EState } from './store/state';
+import EmployeeTrackerError from './utils/Error';
 
 const cTable = require('console.table');
 
@@ -28,14 +29,11 @@ async function handleLogin(retries = 0): Promise<void> {
 	}
 }
 
-async function init() {
+async function app() {
 	let choice;
-	try {
-		await DB.getInstance().connection();
-		await handleLogin();
-
-		Title('Main Menu');
-		do {
+	Title('Main Menu');
+	do {
+		try {
 			choice = (await inquirer.prompt(<any>main())).mainOption;
 			await Actions.getInstance().act(choice);
 
@@ -43,12 +41,28 @@ async function init() {
 				State.getInstance().clear();
 				await init();
 			}
-		} while (choice !== 'exit');
+		} catch (error) {
+			const err = <Error>error;
+
+			// Handling all errors in the app life cycle as EmployeeTracker type Error.
+			const ERROR: EmployeeTrackerError = new EmployeeTrackerError(err.message);
+
+			console.error(`${ERROR.name}\n${ERROR.message}`);
+		}
+	} while (choice !== 'exit');
+}
+
+async function init() {
+	try {
+		await DB.getInstance().connection();
+		await handleLogin();
+		await app();
+
 		Title('Thanks for using this app 🤗 ❤️ 🙏');
 		process.exit(0);
 	} catch (error) {
-		const ERROR = <Error>error;
-		throw new Error(ERROR.message);
+		const ERROR = <EmployeeTrackerError>error;
+		console.error(ERROR.message);
 	}
 }
 
