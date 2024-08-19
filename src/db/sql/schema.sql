@@ -42,7 +42,7 @@ DO $$
 
         CREATE TABLE login (
             id SERIAL PRIMARY KEY,
-            username VARCHAR(50) UNIQUE NOT NULL,
+            username VARCHAR(50) NOT NULL,
             userpassword VARCHAR(100) NOT NULL,
             employee_id INTEGER NOT NULL,
 
