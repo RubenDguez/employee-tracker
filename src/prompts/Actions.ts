@@ -175,7 +175,6 @@ export default class Actions {
    */
   private async createLogin(): Promise<void> {
     this.#response = await inquirer.prompt(<any>newEmployeeForm);
-    console.log(this.#response);
 
     const username = this.#response.username;
     const password = CryptoJS.MD5(this.#response.username + this.#response.password).toString();
@@ -189,7 +188,7 @@ export default class Actions {
    * @description Add an employee
    */
   private async addEmployee(): Promise<void> {
-    Title('Add Employee');
+    await this.viewAllEmployees();
 
     const roleList = await this.getRoleList();
     const managerList = await this.getManagerList();
