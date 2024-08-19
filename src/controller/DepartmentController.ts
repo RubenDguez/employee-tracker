@@ -54,15 +54,15 @@ export default class DepartmentController extends Controller implements CRUD {
     try {
       const values = [id];
       const query = `
-			SELECT department_transactions.id, department_transactions.created_at, department_transactions.updated_at,
-				CONCAT(created_by.first_name, ' ', created_by.last_name) AS created_by_full_name,
-				CONCAT(updated_by.first_name, ' ', updated_by.last_name) AS updated_by_full_name,
-				department.name AS department_name
-			FROM department_transactions
-			JOIN employee AS created_by ON department_transactions.created_by = created_by.id
-			JOIN employee AS updated_by ON department_transactions.updated_by = updated_by.id
-			JOIN department ON department_transactions.department_id = department.id
-			WHERE department.id = $1;
+      SELECT department.id, department_transactions.id AS department_transactions_id, department_transactions.created_at, department_transactions.updated_at,
+          CONCAT(created_by.first_name, ' ', created_by.last_name) AS created_by_full_name,
+          CONCAT(updated_by.first_name, ' ', updated_by.last_name) AS updated_by_full_name,
+          department.name AS department_name
+      FROM department_transactions
+      JOIN employee AS created_by ON department_transactions.created_by = created_by.id
+      JOIN employee AS updated_by ON department_transactions.updated_by = updated_by.id
+      JOIN department ON department_transactions.department_id = department.id
+      WHERE department.id = $1 AND is_deleted = FALSE;
 			`;
       const results = await this.fetch(query, values);
       const row = results.rows[0];
@@ -81,14 +81,15 @@ export default class DepartmentController extends Controller implements CRUD {
   async readAll(): Promise<Array<Department>> {
     try {
       const query = `
-			SELECT department_transactions.id, department_transactions.created_at, department_transactions.updated_at,
-				CONCAT(created_by.first_name, ' ', created_by.last_name) AS created_by_full_name,
-				CONCAT(updated_by.first_name, ' ', updated_by.last_name) AS updated_by_full_name,
-				department.name AS department_name
-			FROM department_transactions
-			JOIN employee AS created_by ON department_transactions.created_by = created_by.id
-			JOIN employee AS updated_by ON department_transactions.updated_by = updated_by.id
-			JOIN department ON department_transactions.department_id = department.id;
+      SELECT department.id, department_transactions.id AS department_transactions_id, department_transactions.created_at, department_transactions.updated_at,
+          CONCAT(created_by.first_name, ' ', created_by.last_name) AS created_by_full_name,
+          CONCAT(updated_by.first_name, ' ', updated_by.last_name) AS updated_by_full_name,
+          department.name AS department_name
+      FROM department_transactions
+      JOIN employee AS created_by ON department_transactions.created_by = created_by.id
+      JOIN employee AS updated_by ON department_transactions.updated_by = updated_by.id
+      JOIN department ON department_transactions.department_id = department.id 
+      WHERE is_deleted = FALSE;
 			`;
       const results = await this.fetch(query);
       return results.rows.map((row) =>
@@ -129,17 +130,25 @@ export default class DepartmentController extends Controller implements CRUD {
 
   /**
    * Delete
-   * @return {Promise<boolean>}
+   * @return {Promise<void>}
    * @description Deletes a department from the database
    * @throws {Error} Department is not defined
    */
-  async delete(): Promise<boolean> {
+  async delete(): Promise<void> {
     if (!this.department) throw new Error('Department is not defined');
     try {
+      const STATE = State.getInstance();
       const values = [this.department.id];
-      const query = 'DELETE FROM department WHERE id = $1;';
-      await this.fetch(query, values);
-      return true;
+      const deleteDepartmentQuery = 'UPDATE department SET is_deleted = TRUE WHERE id = $1;';
+
+      const updateTransactions = `
+			UPDATE department_transactions
+			SET updated_by = $1, updated_at = CURRENT_TIMESTAMP
+			WHERE department_id = $2;
+			`;
+      
+      await this.fetch(deleteDepartmentQuery, values);
+      await this.fetch(updateTransactions, [parseInt(STATE.get(EState.USER_ID)!), this.department.id]);
     } catch (error) {
       const ERROR = <EmployeeTrackerError>error;
       throw new Error(ERROR.message);

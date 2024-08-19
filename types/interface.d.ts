@@ -4,7 +4,7 @@ interface CRUD {
   readAll: () => Promise<Array>;
   readOne: (id: number) => Promise;
   update: (obj: any) => Promise;
-  delete: (id: number) => Promise<boolean>;
+  delete: (id: number) => Promise;
 }
 
 interface RoleUpdatable {

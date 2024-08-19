@@ -3,7 +3,7 @@ import inquirer from 'inquirer';
 import DepartmentController from '../controller/DepartmentController';
 import EmployeeController from '../controller/EmployeeController';
 import RoleController from '../controller/RoleController';
-import { newDepartment } from './Department';
+import { deleteDepartment, newDepartment } from './Department';
 import Title from './Title';
 import Department from '../model/Department';
 import { newRole } from './Role';
@@ -110,16 +110,26 @@ export default class Actions {
    * @description Add a department
    */
   private async addDepartment(): Promise<void> {
-    Title('Add Department');
-    console.table(await this.#departmentController.readAll());
+    await this.viewAllDepartments();
 
     this.#response = await inquirer.prompt(<any>newDepartment());
     this.#department = new Department(this.#response.name);
     this.#departmentController = new DepartmentController(this.#department);
     await this.#departmentController.create();
 
-    Title('Add Department');
-    console.table(await this.#departmentController.readAll());
+    await this.viewAllDepartments();
+  }
+
+  private async deleteDepartment(): Promise<void> {
+    await this.viewAllDepartments();
+
+    this.#response = await inquirer.prompt(<any>deleteDepartment());
+    
+    this.#department = new Department('', parseInt(this.#response.id));
+    this.#departmentController = new DepartmentController(this.#department);
+    await this.#departmentController.delete();
+
+    await this.viewAllDepartments();
   }
 
   /**
@@ -241,6 +251,9 @@ export default class Actions {
         break;
       case 'Update employee role':
         await this.updateEmployeeRole();
+        break;
+      case 'Delete department':
+        await this.deleteDepartment();
         break;
       default:
         return;
