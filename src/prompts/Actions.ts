@@ -8,7 +8,7 @@ import Title from './Title';
 import Department from '../model/Department';
 import { deleteRole, newRole } from './Role';
 import Role from '../model/Role';
-import { deleteEmployee, newEmployee, readEmployeesByManager, updateEmployee } from './Employee';
+import { deleteEmployee, newEmployee, readEmployeesByDepartment, readEmployeesByManager, updateEmployee } from './Employee';
 import Employee from '../model/Employee';
 import { newEmployeeForm, userIntent } from './Login';
 import CryptoJS from 'crypto-js';
@@ -75,6 +75,16 @@ export default class Actions {
   }
 
   /**
+   * Get Department List
+   * @return {Promise<Array<{name: string; value: number}>>}
+   * @description Get a list of departments
+   */
+  private async getDepartmentList(): Promise<Array<{ name: string; value: number }>> {
+    const departmentList = (await this.#departmentController.readAll()).map((department) => ({ name: department.name, value: department.id ?? 0 }));
+    return departmentList;
+  }
+
+  /**
    * View All Departments
    * @return {Promise<void>}
    * @description View all departments
@@ -116,6 +126,20 @@ export default class Actions {
     this.#response = await inquirer.prompt(<any>readEmployeesByManager(managerList));
 
     console.table(await this.#employeeController.readAllBy('manager', parseInt(this.#response.id)));
+  }
+
+  /**
+   * View All Employees By Manager
+   * @return {Promise<void>}
+   * @description View all employees by manager
+   */
+  private async viewAllEmployeesByDepartment(): Promise<void> {
+    Title(`Employees by Department`);
+
+    const departmentList = await this.getDepartmentList();
+    this.#response = await inquirer.prompt(<any>readEmployeesByDepartment(departmentList));
+
+    console.table(await this.#employeeController.readAllBy('department', parseInt(this.#response.id)));
   }
 
   /**
@@ -288,6 +312,9 @@ export default class Actions {
         break;
       case 'View employees by Manager':
         await this.viewAllEmployeesByManager();
+        break;
+      case 'View employees by Department':
+        await this.viewAllEmployeesByDepartment();
         break;
       case 'Add a department':
         await this.addDepartment();

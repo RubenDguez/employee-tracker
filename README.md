@@ -85,14 +85,13 @@ The application meets the following acceptance criteria:
 - **Add Employee**: Prompts the user to add a new employee, including their name, role, and manager.
 - **Update Employee Role**: Allows the user to update an employee's role.
 - **(ROLE Based) View Employees by manager**: General Manager, Store Manager and Assistant Manager are able to view a formatted table of employee ids, names, job titles, departments, salaries, and managers by Manager.
+- **(ROLE Based) View Employees by department**: General Manager, Store Manager and Assistant Manager are able to view a formatted table of employee ids, names, job titles, departments, salaries, and managers by Department.
 - **(ROLE Based) Delete Department**: General Manager and Store Manager are allowed to delete Departments, all other do not have this option.
 - **(ROLE Based) Delete Roles**: General Manager and Store Manager are allowed to delete Roles, all other do not have this option.
 - **(ROLE Based) Delete Employee**: General Manager and Store Manager are allowed to delete Employees, all others do not have this option.
 
 ### Future Features
-
 - Update employee managers.
-- View employees by department.
 - View the total utilized budget of a department.
 
 ## Walkthrough Video
