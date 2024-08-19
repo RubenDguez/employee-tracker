@@ -65,6 +65,21 @@ const readEmployeesByManager = (managers: Array<{ name: string; value: number }>
 }
 
 /**
+ * Read Employee by Department Prompt
+ * @description Read employee by department prompt
+ */
+const readEmployeesByDepartment = (departments: Array<{ name: string; value: number }>) => {
+  return [
+    {
+      name: 'id',
+      message: 'What is the department\'s name you want to search employees by?',
+      type: 'list',
+      choices: departments,
+    }
+  ];
+}
+
+/**
  * Update Employee Prompt
  * @param {Array<{ name: string; value: number }>} roles
  * @param {Array<{ name: string; value: number | null }>} managers 
@@ -114,4 +129,4 @@ const deleteEmployee = () => {
   ]
 }
 
-export { newEmployee, updateEmployee, deleteEmployee, readEmployeesByManager };
+export { newEmployee, updateEmployee, deleteEmployee, readEmployeesByManager, readEmployeesByDepartment };
