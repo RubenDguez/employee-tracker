@@ -84,6 +84,8 @@ The application meets the following acceptance criteria:
 - **Add Role**: Prompts the user to add a new role, including its title, salary, and associated department.
 - **Add Employee**: Prompts the user to add a new employee, including their name, role, and manager.
 - **Update Employee Role**: Allows the user to update an employee's role.
+- **(ROLE Based) Delete Department**: General Manager and Store Manager are allowed to delete Departments, all other do not have this option.
+- **(ROLE Based) Delete Roles**: General Manager and Store Manager are allowed to delete Roles, all other do not have this option.
 
 ### Future Features
 

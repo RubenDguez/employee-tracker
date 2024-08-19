@@ -59,7 +59,7 @@ export default class RoleController extends Controller implements CRUD {
 			JOIN role_transactions ON role.id = role_transactions.role_id
 			JOIN employee AS created_by_employee ON role_transactions.created_by = created_by_employee.id
 			JOIN employee AS updated_by_employee ON role_transactions.updated_by = updated_by_employee.id
-			WHERE role.id = $1;
+			WHERE role.id = $1 AND role.is_deleted = FALSE;
 			`;
       const results = await this.fetch(query, values);
       const row = results.rows[0];
@@ -86,7 +86,9 @@ export default class RoleController extends Controller implements CRUD {
 			JOIN department ON role.department_id = department.id
 			JOIN role_transactions ON role.id = role_transactions.role_id
 			JOIN employee AS created_by_employee ON role_transactions.created_by = created_by_employee.id
-			JOIN employee AS updated_by_employee ON role_transactions.updated_by = updated_by_employee.id;
+			JOIN employee AS updated_by_employee ON role_transactions.updated_by = updated_by_employee.id
+      WHERE role.is_deleted = FALSE
+      ;
 			`;
       const results = await this.fetch(query);
       return results.rows.map((row) =>
@@ -129,17 +131,25 @@ export default class RoleController extends Controller implements CRUD {
 
   /**
    * Delete
-   * @return {Promise<boolean>}
+   * @return {Promise<void>}
    * @description Deletes a role from the database
    * @throws {Error} Role is not defined
    */
-  async delete(): Promise<boolean> {
+  async delete(): Promise<void> {
     if (!this.role) throw new Error('Role is not defined');
     try {
+      const STATE = State.getInstance();
       const values = [this.role.id];
-      const query = 'DELETE FROM role WHERE id = $1;';
-      await this.fetch(query, values);
-      return true;
+      const deleteRoleQuery = 'UPDATE role SET is_deleted = TRUE WHERE id = $1;';
+
+      const updateTransactions = `
+			UPDATE role_transactions
+			SET updated_by = $1, updated_at = CURRENT_TIMESTAMP
+			WHERE role_id = $2;
+			`;
+
+      await this.fetch(deleteRoleQuery, values);
+      await this.fetch(updateTransactions, [parseInt(STATE.get(EState.USER_ID)!), this.role.id]);
     } catch (error) {
       const ERROR = <EmployeeTrackerError>error;
       throw new Error(ERROR.message);

@@ -23,6 +23,7 @@ DO $$
             title VARCHAR(30) UNIQUE NOT NULL,
             salary NUMERIC(10, 2) NOT NULL CHECK (salary >= 0) DEFAULT 0.00,
             department_id INTEGER NOT NULL,
+            is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
 
             FOREIGN KEY (department_id) REFERENCES department(id)
         );
@@ -33,6 +34,7 @@ DO $$
             last_name VARCHAR(30) NOT NULL,
             role_id INTEGER NOT NULL,
             manager_id INTEGER,
+            is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
 
             FOREIGN KEY (role_id) REFERENCES role(id),
             FOREIGN KEY (manager_id) REFERENCES employee (id)

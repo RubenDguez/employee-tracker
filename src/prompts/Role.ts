@@ -1,6 +1,6 @@
 /**
  * New Role Prompt
- * @param {Array<{ name: string; value: number }>} departments 
+ * @param {Array<{ name: string; value: number }>} departments
  * @description Create a new role prompt
  */
 const newRole = (departments: Array<{ name: string; value: number }>) => {
@@ -43,4 +43,27 @@ const newRole = (departments: Array<{ name: string; value: number }>) => {
   ];
 };
 
-export { newRole };
+/**
+ * Delete Role Prompt
+ * @description Delete a role prompt
+ */
+const deleteRole = () => {
+  return [
+    {
+      name: 'id',
+      message: 'What is the id of the role you want to delete?',
+      validate: (id: string) => {
+        if (!id.length) {
+          return 'Please provide a role ID.';
+        }
+        if (isNaN(parseInt(id))) {
+          return 'Please provide a valid role ID.';
+        }
+  
+        return true;
+      }
+    }
+  ];
+};
+
+export { newRole, deleteRole };

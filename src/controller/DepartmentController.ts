@@ -62,7 +62,7 @@ export default class DepartmentController extends Controller implements CRUD {
       JOIN employee AS created_by ON department_transactions.created_by = created_by.id
       JOIN employee AS updated_by ON department_transactions.updated_by = updated_by.id
       JOIN department ON department_transactions.department_id = department.id
-      WHERE department.id = $1 AND is_deleted = FALSE;
+      WHERE department.id = $1 AND department.is_deleted = FALSE;
 			`;
       const results = await this.fetch(query, values);
       const row = results.rows[0];
@@ -89,7 +89,7 @@ export default class DepartmentController extends Controller implements CRUD {
       JOIN employee AS created_by ON department_transactions.created_by = created_by.id
       JOIN employee AS updated_by ON department_transactions.updated_by = updated_by.id
       JOIN department ON department_transactions.department_id = department.id 
-      WHERE is_deleted = FALSE;
+      WHERE department.is_deleted = FALSE;
 			`;
       const results = await this.fetch(query);
       return results.rows.map((row) =>

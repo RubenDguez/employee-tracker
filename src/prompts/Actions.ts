@@ -6,7 +6,7 @@ import RoleController from '../controller/RoleController';
 import { deleteDepartment, newDepartment } from './Department';
 import Title from './Title';
 import Department from '../model/Department';
-import { newRole } from './Role';
+import { deleteRole, newRole } from './Role';
 import Role from '../model/Role';
 import { newEmployee, updateEmployee } from './Employee';
 import Employee from '../model/Employee';
@@ -153,6 +153,22 @@ export default class Actions {
   }
 
   /**
+   * Delete Role
+   * @return {Promise<void>}
+   * @description Delete a role
+   */
+  private async deleteRole(): Promise<void> {
+    await this.viewAllRoles();
+
+    this.#response = await inquirer.prompt(<any>deleteRole());
+    this.#role = new Role('', 0, 0, parseInt(this.#response.id));
+    this.#roleController = new RoleController(this.#role);
+    await this.#roleController.delete();
+
+    await this.viewAllRoles();
+  }
+
+  /**
    * Create Login
    * @return {Promise<void>}
    * @description Create a login
@@ -254,6 +270,9 @@ export default class Actions {
         break;
       case 'Delete department':
         await this.deleteDepartment();
+        break;
+      case 'Delete role':
+        await this.deleteRole();
         break;
       default:
         return;
