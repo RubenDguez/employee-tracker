@@ -18,4 +18,21 @@ const newDepartment = () => [
   },
 ];
 
-export { newDepartment };
+const deleteDepartment = () => [
+  {
+    name: 'id',
+    message: 'Select a department to delete',
+    validate: (id: string) => {
+      if (!id.length) {
+        return 'Please select a department to delete.';
+      }
+      if (isNaN(parseInt(id))) {
+        return 'Please provide a valid department ID.';
+      }
+
+      return true;
+    }
+  }
+]
+
+export { newDepartment, deleteDepartment };

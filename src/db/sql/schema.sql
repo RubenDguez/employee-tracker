@@ -14,7 +14,8 @@ DO $$
     BEGIN
         CREATE TABLE department (
             id SERIAL PRIMARY KEY,
-            name VARCHAR(30) UNIQUE NOT NULL
+            name VARCHAR(30) UNIQUE NOT NULL,
+            is_deleted BOOLEAN NOT NULL DEFAULT FALSE
         );
 
         CREATE TABLE role (
