@@ -8,7 +8,7 @@ import Title from './Title';
 import Department from '../model/Department';
 import { deleteRole, newRole } from './Role';
 import Role from '../model/Role';
-import { newEmployee, updateEmployee } from './Employee';
+import { deleteEmployee, newEmployee, updateEmployee } from './Employee';
 import Employee from '../model/Employee';
 import { newEmployeeForm, userIntent } from './Login';
 import CryptoJS from 'crypto-js';
@@ -214,6 +214,23 @@ export default class Actions {
   }
 
   /**
+   * Delete Employee
+   * @return {Promise<void>}
+   * @description Delete an employee
+   */
+  private async deleteEmployee(): Promise<void> {
+    await this.viewAllEmployees();
+
+    this.#response = await inquirer.prompt(<any>deleteEmployee());
+
+    this.#employee = new Employee('', '', 0, 0, parseInt(this.#response.id));
+    this.#employeeController = new EmployeeController(this.#employee);
+    await this.#employeeController.delete();
+
+    await this.viewAllEmployees();
+  }
+
+  /**
    * Update Employee Role
    * @return {Promise<void>}
    * @description Update an employee's role
@@ -273,6 +290,9 @@ export default class Actions {
         break;
       case 'Delete role':
         await this.deleteRole();
+        break;
+      case 'Delete employee':
+        await this.deleteEmployee();
         break;
       default:
         return;

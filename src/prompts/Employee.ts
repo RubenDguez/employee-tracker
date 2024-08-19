@@ -76,4 +76,27 @@ const updateEmployee = (roles: Array<{ name: string; value: number }>, managers:
   ];
 };
 
-export { newEmployee, updateEmployee };
+/**
+ * Delete Employee Prompt
+ * @description Delete an employee prompt
+ */
+const deleteEmployee = () => {
+  return [
+    {
+      name: 'id', 
+      message: 'What is the id of the employee you want to delete?',
+      validate: (id: string) => {
+        if (!id.length) {
+          return 'Please select a department to delete.';
+        }
+        if (isNaN(parseInt(id))) {
+          return 'Please provide a valid department ID.';
+        }
+  
+        return true;
+      }
+    }
+  ]
+}
+
+export { newEmployee, updateEmployee, deleteEmployee };

@@ -86,13 +86,13 @@ The application meets the following acceptance criteria:
 - **Update Employee Role**: Allows the user to update an employee's role.
 - **(ROLE Based) Delete Department**: General Manager and Store Manager are allowed to delete Departments, all other do not have this option.
 - **(ROLE Based) Delete Roles**: General Manager and Store Manager are allowed to delete Roles, all other do not have this option.
+- **(ROLE Based) Delete Employee**: General Manager and Store Manager are allowed to delete Employees, all others do not have this option.
 
 ### Future Features
 
 - Update employee managers.
 - View employees by manager.
 - View employees by department.
-- Delete departments, roles, and employees.
 - View the total utilized budget of a department.
 
 ## Walkthrough Video
