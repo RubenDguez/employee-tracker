@@ -78,8 +78,8 @@ export default class Employee extends Base {
     this.#manager = value;
   }
 
-  get salary() {
-    return this.#salary;
+  get salary(): number {
+    return this.#salary ?? 0;
   }
 
   set salary(value: number | undefined) {
@@ -98,7 +98,7 @@ export default class Employee extends Base {
       firstName: this.firstName,
       lastName: this.lastName,
       role: this.role,
-      salary: ROLE?.includes('manager') ? this.salary : 0.0,
+      salary: ROLE?.includes('manager') ? parseFloat(this.salary.toString()) : 0.0,
       manager: this.manager,
     };
 
