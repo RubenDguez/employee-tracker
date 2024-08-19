@@ -160,9 +160,18 @@ export default class EmployeeController extends Controller implements CRUD {
   async delete(): Promise<boolean> {
     if (!this.employee) throw new Error('Employee is not defined');
     try {
+      const STATE = State.getInstance();
       const values = [this.employee.id];
-      const query = 'DELETE FROM employee WHERE id = $1;';
-      await this.fetch(query, values);
+      const deleteEmployeeQuery = 'UPDATE employee SET is_deleted = TRUE WHERE id = $1;';
+
+      const updateTransactions = `
+			UPDATE role_transactions
+			SET updated_by = $1, updated_at = CURRENT_TIMESTAMP
+			WHERE role_id = $2;
+			`;
+      
+      await this.fetch(deleteEmployeeQuery, values);
+      await this.fetch(updateTransactions, [parseInt(STATE.get(EState.USER_ID)!), this.employee.id]);
       return true;
     } catch (error) {
       const ERROR = <EmployeeTrackerError>error;
