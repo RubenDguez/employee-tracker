@@ -1,6 +1,10 @@
 import inquirer from 'inquirer';
 import State, { EState } from '../store/state';
 
+/**
+ * Main prompt
+ * @description Main prompt with different options based on the user's role
+ */
 const main = () => {
   const ROLE = State.getInstance().get(EState.ROLE);
 

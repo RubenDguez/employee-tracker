@@ -13,6 +13,11 @@ import EmployeeTrackerError from './utils/Error';
 
 const cTable = require('console.table');
 
+/**
+ * Handle Login
+ * @param {number} retries
+ * @return {Promise<void>}
+ */
 async function handleLogin(retries = 0): Promise<void> {
   const RETRIES = retries;
 
@@ -32,7 +37,12 @@ async function handleLogin(retries = 0): Promise<void> {
   }
 }
 
-async function app() {
+/**
+ * App
+ * @return {Promise<void>}
+ * @description Main app function
+ */
+async function app(): Promise<void> {
   let choice;
   Title('Main Menu');
   do {
@@ -55,7 +65,12 @@ async function app() {
   } while (choice !== 'exit');
 }
 
-async function init() {
+/**
+ * Init
+ * @return {Promise<void>}
+ * @description Initialize the app
+ */
+async function init(): Promise<void> {
   try {
     await DB.getInstance().connection();
     await handleLogin();

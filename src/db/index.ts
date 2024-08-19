@@ -5,6 +5,7 @@ import EmployeeTrackerError from '../utils/Error';
 
 dotenv.config({ path: path.join(process.cwd(), 'db.env') });
 
+// Database Class
 export default class DB {
   static #instance: DB | null = null;
   #connection: PoolClient | null = null;
@@ -21,7 +22,11 @@ export default class DB {
   // Preventing unnecessary connections
   private constructor() {}
 
-  static getInstance() {
+  /**
+   * Get Instance
+   * @return {DB}
+   */
+  static getInstance(): DB {
     if (!this.#instance) this.#instance = new DB();
     return this.#instance;
   }

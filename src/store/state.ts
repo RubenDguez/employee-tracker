@@ -5,13 +5,22 @@ export enum EState {
   ROLE = 'ROLE',
 }
 
+/**
+ * State
+ * @description Store class to hold the state of the application
+ */
 export default class State {
   private static instance: State | null = null;
   private _store: Map<string, string> = new Map();
 
+  /** Constructor */
   private constructor() {}
 
-  public static getInstance() {
+  /**
+   * Get Instance
+   * @return {State}
+   */
+  public static getInstance(): State {
     if (this.instance !== null) return this.instance;
 
     this.instance = new State();

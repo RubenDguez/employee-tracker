@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+
+// Abstract Class Base
 export default abstract class Base {
   #id: number | null;
   #createdAt: TDate;
@@ -6,6 +9,14 @@ export default abstract class Base {
   #createdBy: string | null;
   #updatedBy: string | null;
 
+  /**
+   * Constructor
+   * @param {number} id 
+   * @param {Date} createdAt 
+   * @param {Date} updatedAt 
+   * @param {string} createdBy 
+   * @param {string} updatedBy 
+   */
   constructor(id?: number, createdAt?: Date, updatedAt?: Date, createdBy?: string, updatedBy?: string) {
     this.#id = id ?? null;
     this.#createdAt = createdAt ?? null;
@@ -54,5 +65,6 @@ export default abstract class Base {
     this.#updatedBy = value;
   }
 
+  /** To Object */
   abstract toObject(): any;
 }

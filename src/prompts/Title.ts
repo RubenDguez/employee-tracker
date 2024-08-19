@@ -1,5 +1,9 @@
 import State, { EState } from '../store/state';
 
+/**
+ * Title
+ * @description Display the title of the application
+ */
 export default (text?: string) => {
   const username = State.getInstance().get(EState.USER_FULL_NAME) ?? '';
   const displayUsername = username ? ` ${username.toUpperCase()} ` : '';

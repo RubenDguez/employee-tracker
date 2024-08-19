@@ -1,3 +1,8 @@
+/**
+ * New Role Prompt
+ * @param {Array<{ name: string; value: number }>} departments 
+ * @description Create a new role prompt
+ */
 const newRole = (departments: Array<{ name: string; value: number }>) => {
   return [
     {

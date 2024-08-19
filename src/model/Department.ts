@@ -2,9 +2,19 @@ import { DateTime } from 'luxon';
 import Base from './Base';
 import State, { EState } from '../store/state';
 
+// Department Class
 export default class Department extends Base {
   #name: string;
 
+  /**
+   * Constructor
+   * @param {string} name 
+   * @param {number} id 
+   * @param {Date} createdAt 
+   * @param {Date} updatedAt 
+   * @param {string} createdBy 
+   * @param {string} updatedBy 
+   */
   constructor(name: string, id?: number, createdAt?: Date, updatedAt?: Date, createdBy?: string, updatedBy?: string) {
     super(id, createdAt, updatedAt, createdBy, updatedBy);
 
@@ -19,7 +29,11 @@ export default class Department extends Base {
     this.#name = value;
   }
 
-  toObject(): Department {
+  /**
+   * To Object
+   * @return {Department}
+   */
+  override toObject(): Department {
     const ROLE = State.getInstance().get(EState.ROLE);
 
     let department: Partial<Department> = {

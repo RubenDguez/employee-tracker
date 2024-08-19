@@ -1,3 +1,9 @@
+/**
+ * New Employee Prompt
+ * @param {Array<{ name: string; value: number }>} roles 
+ * @param {Array<{ name: string; value: number | null }>} managers 
+ * @description Create a new employee prompt
+ */
 const newEmployee = (roles: Array<{ name: string; value: number }>, managers: Array<{ name: string; value: number | null }>) => {
   managers.unshift({ name: 'NONE', value: null });
 
@@ -43,6 +49,12 @@ const newEmployee = (roles: Array<{ name: string; value: number }>, managers: Ar
   ];
 };
 
+/**
+ * Update Employee Prompt
+ * @param {Array<{ name: string; value: number }>} roles
+ * @param {Array<{ name: string; value: number | null }>} managers 
+ * @description Update an employee prompt
+ */
 const updateEmployee = (roles: Array<{ name: string; value: number }>, managers: Array<{ name: string; value: number | null }>) => {
   return [
     {

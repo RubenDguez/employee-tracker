@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import Base from './Base';
 import State, { EState } from '../store/state';
 
+// Employee Class
 export default class Employee extends Base {
   #firstName: string;
   #lastName: string;
@@ -9,6 +10,19 @@ export default class Employee extends Base {
   #manager: number | string;
   #salary: number | undefined;
 
+  /**
+   * Constructor
+   * @param {string} firstName 
+   * @param {string} lastName 
+   * @param {number | string} roleId 
+   * @param {number | string} managerId 
+   * @param {number} id 
+   * @param {Date} createdAt 
+   * @param {Date} updatedAt 
+   * @param {number} salary 
+   * @param {string} createdBy 
+   * @param {string} updatedBy 
+   */
   constructor(
     firstName: string,
     lastName: string,
@@ -72,6 +86,10 @@ export default class Employee extends Base {
     this.#salary = value;
   }
 
+  /**
+   * To Object
+   * @return {Employee} 
+   */
   override toObject(): Employee {
     const ROLE = State.getInstance().get(EState.ROLE);
 

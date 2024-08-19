@@ -3,6 +3,7 @@ import State, { EState } from '../store/state';
 import EmployeeTrackerError from '../utils/Error';
 import Controller from './Controller';
 
+// Employee Controller Class
 export default class EmployeeController extends Controller implements CRUD {
   private readonly employee: Employee | undefined;
 
