@@ -3,11 +3,18 @@ import EmployeeTrackerError from '../utils/Error';
 import Controller from './Controller';
 import CryptoJS from 'crypto-js';
 
+// Login Controller Class
 export default class LoginController extends Controller {
   constructor() {
     super();
   }
 
+  /**
+   * Login
+   * @param {string} username
+   * @param {string} password
+   * @return {Promise<boolean>}
+   */
   async login(username: string, password: string): Promise<boolean> {
     try {
       const values = [username];
@@ -38,6 +45,13 @@ export default class LoginController extends Controller {
     }
   }
 
+  /**
+   * Create
+   * @param {string} username
+   * @param {string} password
+   * @param {number} userId
+   * @return {Promise<boolean>}
+   */
   async create(username: string, password: string, userId: number): Promise<boolean> {
     try {
       const values = [username, password, userId];

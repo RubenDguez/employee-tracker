@@ -1,6 +1,9 @@
 const supportedSpecialChars = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '+', '=', '{', '}', '[', ']', '|', ';', ':', '<', '>', '.', '?'];
 const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
+/**
+ * Default prompt for username and password
+ */
 const defPrompt = [
   {
     name: 'username',
@@ -26,6 +29,9 @@ const defPrompt = [
   },
 ];
 
+/**
+ * Prompt for user intent
+ */
 const userIntent = [
   {
     name: 'usingApp',
@@ -35,6 +41,9 @@ const userIntent = [
   },
 ];
 
+/**
+ * New employee form
+ */
 const newEmployeeForm = [
   {
     name: 'username',

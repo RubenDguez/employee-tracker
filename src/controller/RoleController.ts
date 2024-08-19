@@ -3,6 +3,7 @@ import State, { EState } from '../store/state';
 import EmployeeTrackerError from '../utils/Error';
 import Controller from './Controller';
 
+// Role Controller Class
 export default class RoleController extends Controller implements CRUD {
   private readonly role: Role | undefined;
 

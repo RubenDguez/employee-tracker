@@ -1,3 +1,6 @@
+/**
+ * Custom error class for Employee Tracker
+ */
 export default class EmployeeTrackerError extends Error {
   constructor(message: string) {
     super(message);

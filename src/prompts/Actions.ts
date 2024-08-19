@@ -14,6 +14,7 @@ import { newEmployeeForm, userIntent } from './Login';
 import CryptoJS from 'crypto-js';
 import LoginController from '../controller/LoginController';
 
+// Actions Class
 export default class Actions {
   #response: any;
   static #actionsInstance: Actions | null = null;
@@ -27,6 +28,7 @@ export default class Actions {
   #role: Role | null = null;
   #employee: Employee | null = null;
 
+  /** Constructor */
   private constructor() {
     this.#departmentController = new DepartmentController();
     this.#roleController = new RoleController();
@@ -34,7 +36,12 @@ export default class Actions {
     this.#loginController = new LoginController();
   }
 
-  public static getInstance() {
+  /**
+   * Get Instance
+   * @returns {Actions}
+   * @description Get an instance of Actions
+   */
+  public static getInstance(): Actions {
     if (!this.#actionsInstance) {
       this.#actionsInstance = new Actions();
     }
@@ -42,6 +49,11 @@ export default class Actions {
     return this.#actionsInstance;
   }
 
+  /**
+   * Get Manager List
+   * @return {Promise<Array<{ name: string; value: number }>>}
+   * @description Get a list of managers
+   */
   private async getManagerList(): Promise<Array<{ name: string; value: number }>> {
     const managerList = (await this.#employeeController.readAll())
       .filter((employee) => {
@@ -52,27 +64,52 @@ export default class Actions {
     return managerList;
   }
 
-  private async getRoleList() {
+  /**
+   * Get Role List
+   * @return {Promise<Array<{name: string; value: number;}>>}
+   * @description Get a list of roles
+   */
+  private async getRoleList(): Promise<Array<{name: string; value: number;}>> {
     const roleList = (await this.#roleController.readAll()).map((role) => ({ name: role.title, value: role.id ?? 0 }));
     return roleList;
   }
 
-  private async viewAllDepartments() {
+  /**
+   * View All Departments
+   * @return {Promise<void>}
+   * @description View all departments
+   */
+  private async viewAllDepartments(): Promise<void> {
     Title('All Departments');
     console.table(await this.#departmentController.readAll());
   }
 
-  private async viewAllRoles() {
+  /**
+   * View All Roles
+   * @returns {Promise<void>}
+   * @description View all roles
+   */
+  private async viewAllRoles(): Promise<void> {
     Title('All Roles');
     console.table(await this.#roleController.readAll());
   }
 
-  private async viewAllEmployees() {
+  /**
+   * View All Employees
+   * @return {Promise<void>}
+   * @description View all employees
+   */
+  private async viewAllEmployees(): Promise<void> {
     Title('All Employees');
     console.table(await this.#employeeController.readAll());
   }
 
-  private async addDepartment() {
+  /**
+   * Add Department
+   * @return {Promise<void>}
+   * @description Add a department
+   */
+  private async addDepartment(): Promise<void> {
     Title('Add Department');
     console.table(await this.#departmentController.readAll());
 
@@ -85,7 +122,12 @@ export default class Actions {
     console.table(await this.#departmentController.readAll());
   }
 
-  private async addRole() {
+  /**
+   * Add Role
+   * @return {Promise<void>}
+   * @description Add a role
+   */
+  private async addRole(): Promise<void> {
     const departmentList = (await this.#departmentController.readAll()).map((department) => ({ name: department.name, value: department.id ?? 0 }));
 
     Title('Add Role');
@@ -100,7 +142,12 @@ export default class Actions {
     console.table(await this.#roleController.readAll());
   }
 
-  private async createLogin() {
+  /**
+   * Create Login
+   * @return {Promise<void>}
+   * @description Create a login
+   */
+  private async createLogin(): Promise<void> {
     this.#response = await inquirer.prompt(<any>newEmployeeForm);
     console.log(this.#response);
 
@@ -110,7 +157,12 @@ export default class Actions {
     await this.#loginController.create(username, password, <number>this.#employee?.id);
   }
 
-  private async addEmployee() {
+  /**
+   * Add Employee
+   * @return {Promise<void>}
+   * @description Add an employee
+   */
+  private async addEmployee(): Promise<void> {
     Title('Add Employee');
 
     const roleList = await this.getRoleList();
@@ -135,7 +187,12 @@ export default class Actions {
     await this.viewAllEmployees();
   }
 
-  private async updateEmployeeRole() {
+  /**
+   * Update Employee Role
+   * @return {Promise<void>}
+   * @description Update an employee's role
+   */
+  private async updateEmployeeRole(): Promise<void> {
     Title('Update Employee Role');
     console.table(await this.#employeeController.readAll());
 
@@ -156,7 +213,13 @@ export default class Actions {
     await this.viewAllEmployees();
   }
 
-  async act(action: string) {
+  /**
+   * Act
+   * @param {string} action 
+   * @return {Promise<void>}
+   * @description Perform an action
+   */
+  async act(action: string): Promise<void> {
     switch (action) {
       case 'View all departments':
         await this.viewAllDepartments();

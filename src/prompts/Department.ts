@@ -1,3 +1,7 @@
+/**
+ * New Department Prompt
+ * @description Create a new department prompt
+ */
 const newDepartment = () => [
   {
     name: 'name',

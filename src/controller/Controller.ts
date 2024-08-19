@@ -3,6 +3,7 @@ import { QueryResult } from 'pg';
 import DB from '../db';
 import EmployeeTrackerError from '../utils/Error';
 
+// Controller Class
 export default class Controller {
   /**
    * Fetch
