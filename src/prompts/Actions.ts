@@ -130,16 +130,26 @@ export default class Actions {
 
   /**
    * View All Employees By Manager
+   * @param {Partial<{budget: boolean}>} options
    * @return {Promise<void>}
    * @description View all employees by manager
    */
-  private async viewAllEmployeesByDepartment(): Promise<void> {
-    Title(`Employees by Department`);
+  private async viewAllEmployeesByDepartment(options?: Partial<{budget: boolean}>): Promise<void> {
+    const defaultOptions: {budget: boolean} = {budget: false};
+    const _options = {...defaultOptions, ...options};
+
+    Title(_options.budget ? `Budget by Department` : `Employees by Department`);
 
     const departmentList = await this.getDepartmentList();
     this.#response = await inquirer.prompt(<any>readEmployeesByDepartment(departmentList));
 
-    console.table(await this.#employeeController.readAllBy('department', parseInt(this.#response.id)));
+    const employeeByDepartment = await this.#employeeController.readAllBy('department', parseInt(this.#response.id));
+    console.table(employeeByDepartment);
+
+    if (_options?.budget) {
+      const budget = employeeByDepartment.reduce((prev, curr) => (prev + (curr?.salary ?? 0)), 0);
+      console.warn(`Department budget: $${budget.toFixed(2)} / year\n\n`);
+    }
   }
 
   /**
@@ -327,6 +337,9 @@ export default class Actions {
         break;
       case 'Update employee role':
         await this.updateEmployeeRole();
+        break;
+      case 'View budget by department':
+        await this.viewAllEmployeesByDepartment({budget: true});
         break;
       case 'Delete department':
         await this.deleteDepartment();

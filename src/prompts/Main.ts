@@ -13,7 +13,19 @@ const main = () => {
 
   // Add manage's options
   if (ROLE?.includes('manager')) {
-    const opts = ['View employees by Manager', 'View employees by Department', new inquirer.Separator(), 'Add a department', 'Add a role', 'Add an employee', new inquirer.Separator(), 'Update employee role', new inquirer.Separator()];
+    const opts = [
+      'View employees by Manager',
+      'View employees by Department',
+      new inquirer.Separator(),
+      'View budget by department',
+      new inquirer.Separator(),
+      'Add a department',
+      'Add a role',
+      'Add an employee',
+      new inquirer.Separator(),
+      'Update employee role',
+      new inquirer.Separator(),
+    ];
     choices = [...choices, ...opts];
   }
 
