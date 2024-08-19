@@ -8,7 +8,7 @@ import Title from './Title';
 import Department from '../model/Department';
 import { deleteRole, newRole } from './Role';
 import Role from '../model/Role';
-import { deleteEmployee, newEmployee, updateEmployee } from './Employee';
+import { deleteEmployee, newEmployee, readEmployeesByManager, updateEmployee } from './Employee';
 import Employee from '../model/Employee';
 import { newEmployeeForm, userIntent } from './Login';
 import CryptoJS from 'crypto-js';
@@ -69,7 +69,7 @@ export default class Actions {
    * @return {Promise<Array<{name: string; value: number;}>>}
    * @description Get a list of roles
    */
-  private async getRoleList(): Promise<Array<{name: string; value: number;}>> {
+  private async getRoleList(): Promise<Array<{ name: string; value: number }>> {
     const roleList = (await this.#roleController.readAll()).map((role) => ({ name: role.title, value: role.id ?? 0 }));
     return roleList;
   }
@@ -105,6 +105,20 @@ export default class Actions {
   }
 
   /**
+   * View All Employees By Manager
+   * @return {Promise<void>}
+   * @description View all employees by manager
+   */
+  private async viewAllEmployeesByManager(): Promise<void> {
+    Title(`Employees by Manager`);
+
+    const managerList = await this.getManagerList();
+    this.#response = await inquirer.prompt(<any>readEmployeesByManager(managerList));
+
+    console.table(await this.#employeeController.readAllBy('manager', parseInt(this.#response.id)));
+  }
+
+  /**
    * Add Department
    * @return {Promise<void>}
    * @description Add a department
@@ -124,7 +138,7 @@ export default class Actions {
     await this.viewAllDepartments();
 
     this.#response = await inquirer.prompt(<any>deleteDepartment());
-    
+
     this.#department = new Department('', parseInt(this.#response.id));
     this.#departmentController = new DepartmentController(this.#department);
     await this.#departmentController.delete();
@@ -257,7 +271,7 @@ export default class Actions {
 
   /**
    * Act
-   * @param {string} action 
+   * @param {string} action
    * @return {Promise<void>}
    * @description Perform an action
    */
@@ -271,6 +285,9 @@ export default class Actions {
         break;
       case 'View all employees':
         await this.viewAllEmployees();
+        break;
+      case 'View employees by Manager':
+        await this.viewAllEmployeesByManager();
         break;
       case 'Add a department':
         await this.addDepartment();

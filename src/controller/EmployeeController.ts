@@ -119,6 +119,71 @@ export default class EmployeeController extends Controller implements CRUD {
   }
 
   /**
+   * Read All
+   * @return {Promise<Array<Employee>>}
+   * @description Reads all employees from the database
+   */
+  async readAllBy(by: 'manager' | 'department', id: number): Promise<Array<Employee>> {
+    try {
+      let query: string = '';
+      if (by === 'manager') query = 
+      `
+			SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_name, role.salary,
+				CASE WHEN manager.id IS NULL THEN 'NONE' ELSE CONCAT(manager.first_name, ' ', manager.last_name) END AS manager_full_name, 
+				employee_transactions.created_at, employee_transactions.updated_at,
+				department.name AS department_name,
+				CONCAT(created_by_employee.first_name, ' ', created_by_employee.last_name) AS created_by_full_name,
+				CONCAT(updated_by_employee.first_name, ' ', updated_by_employee.last_name) AS updated_by_full_name
+			FROM employee
+			JOIN role ON employee.role_id = role.id
+			LEFT JOIN employee AS manager ON employee.manager_id = manager.id
+			JOIN department ON role.department_id = department.id
+			JOIN employee_transactions ON employee.id = employee_transactions.employee_id
+			JOIN employee AS created_by_employee ON employee_transactions.created_by = created_by_employee.id
+			JOIN employee AS updated_by_employee ON employee_transactions.updated_by = updated_by_employee.id
+      WHERE employee.is_deleted = FALSE AND manager.id = $1;
+			`
+
+      if (by === 'department') query =
+      `
+			SELECT employee.id, employee.first_name, employee.last_name, role.title AS role_name, role.salary,
+				CASE WHEN manager.id IS NULL THEN 'NONE' ELSE CONCAT(manager.first_name, ' ', manager.last_name) END AS manager_full_name, 
+				employee_transactions.created_at, employee_transactions.updated_at,
+				department.name AS department_name,
+				CONCAT(created_by_employee.first_name, ' ', created_by_employee.last_name) AS created_by_full_name,
+				CONCAT(updated_by_employee.first_name, ' ', updated_by_employee.last_name) AS updated_by_full_name
+			FROM employee
+			JOIN role ON employee.role_id = role.id
+			LEFT JOIN employee AS manager ON employee.manager_id = manager.id
+			JOIN department ON role.department_id = department.id
+			JOIN employee_transactions ON employee.id = employee_transactions.employee_id
+			JOIN employee AS created_by_employee ON employee_transactions.created_by = created_by_employee.id
+			JOIN employee AS updated_by_employee ON employee_transactions.updated_by = updated_by_employee.id
+      WHERE employee.is_deleted = FALSE AND department.id = $1;
+			`
+      ;
+      const results = await this.fetch(query, [id]);
+      return results.rows.map((row) =>
+        new Employee(
+          row.first_name,
+          row.last_name,
+          row.role_name,
+          row.manager_full_name,
+          row.id,
+          row.created_at,
+          row.updated_at,
+          row.salary,
+          row.created_by_full_name,
+          row.updated_by_full_name,
+        ).toObject(),
+      );
+    } catch (error) {
+      const ERROR = <EmployeeTrackerError>error;
+      throw new Error(ERROR.message);
+    }
+  }
+
+  /**
    * Update
    * @param {Partial<EmployeeUpdatable>} fields
    * @return {Promise<Employee>}
