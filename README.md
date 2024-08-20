@@ -94,7 +94,7 @@ The database schema includes the following three tables:
 
 ## Walkthrough Video
 
-A walkthrough video demonstrating the functionality of the application is available [here](link-to-video).
+A walkthrough video demonstrating the functionality of the application is available [here](https://www.youtube.com/watch?v=XBAS-EguFtk).
 
 The video covers the following:
 
